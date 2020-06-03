@@ -16,7 +16,7 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent } from '../../../colors';
+import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent, colorGreenDark } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO } from '../../../images'
 
 const BUTTON_A_TAG = 'a-btn'
@@ -132,18 +132,17 @@ export default class QuestionScreen extends Component {
       option2: 0
     }
 
-    if (operation==21) {
+    if (operation==PLUSICONGREY) {
       result = valueX+valueY
     
-    } else if (operation==22) {
+    } else if (operation==MINUSICONGREY) {
       result = valueX-valueY
     
-    } else if (operation==23) {
+    } else if (operation==DIVISIONICONGREY) {
       result = (valueX/valueY).toFixed(1)
     
-    } else if (operation==24) {
+    } else if (operation==TIMESICONGREY) {
       result = valueX*valueY
-    
     }
 
     result = parseInt(result, 10)
@@ -194,14 +193,14 @@ export default class QuestionScreen extends Component {
 
     let x = 0
     let y = 0
-    if (operation==22) {
+    if (operation==MINUSICONGREY) {
       //minus
       do {
         x = Math.floor(Math.random() * (max - min)) + min;
         y = Math.floor(Math.random() * (max - min)) + min;
       } while (x-y<=0 || x==y);
     
-    } else if (operation==23) {
+    } else if (operation==DIVISIONICONGREY) {
       //divide
       do {
         x = Math.floor(Math.random() * (max - min)) + min;
@@ -290,13 +289,27 @@ export default class QuestionScreen extends Component {
   render() {
     let modalCorrect = <Modal    
                         animationType="slide"
-                        visible={this.state.answerCorrect}
+                        visible={/*this.state.answerCorrect*/true}
                         transparent>
                         <View style={styles.containerModal}>
                           <View style={styles.viewContentModal}>
                             <ModalCorrect numeroJogadas={this.state.numJogadas} />
-                            <View style={{flex: 1, borderWidth: 1}}>
-                              
+                            <View style={{flex: 1, padding: 10, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                              <TouchableOpacity
+                                onPress={() => {
+
+                                }}
+                                style={{
+                                  backgroundColor: colorGreenDark,
+                                  height: '100%',
+                                  width: '100%',
+                                  borderRadius: 15,
+                                  justifyContent: 'center',
+                                  alignItems: 'center'
+                                }}
+                              >
+                               <Text style={{fontSize: 18, fontWeight: 'bold', color: white}}>CONTINUAR</Text> 
+                              </TouchableOpacity>
                             </View>
                           </View>
                         </View>
@@ -304,7 +317,7 @@ export default class QuestionScreen extends Component {
 
     let modalIncorrect = <Modal    
                         animationType="slide"
-                        visible={this.state.answerIncorrect}
+                        visible={/*this.state.answerIncorrect*/false}
                         transparent>
                         <View style={styles.containerModal}>
                           <View style={styles.viewContentModal}>

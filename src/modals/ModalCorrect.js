@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginStart: 16,
         marginEnd: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: "Roboto-Bold"
     }
 })
 
