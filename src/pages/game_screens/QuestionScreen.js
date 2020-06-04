@@ -25,6 +25,7 @@ const BUTTON_C_TAG = 'c-btn'
 
 const ModalCorrect = require('../../modals/ModalCorrect')
 const ModalIncorrect = require('../../modals/ModalIncorrect')
+const ModalVictory = require('../../modals/ModalVictory')
 
 export default class QuestionScreen extends Component {
 
@@ -40,7 +41,8 @@ export default class QuestionScreen extends Component {
         statusButtonB: false,
         statusButtonC: false,
         answerCorrect: false,
-        answerIncorrect: true,
+        answerIncorrect: false,
+        answerLast: false,
         numJogadas: 0,
         numErradas: 0,
         numberX: 0,
@@ -52,12 +54,17 @@ export default class QuestionScreen extends Component {
   }
 
   componentDidMount() {
-    this.checkCorrection(0)
+    this.goToNextQuestion()
   }
 
   checkCorrection(value) {
     let numJogadas = this.state.numJogadas
     let numErradas = this.state.numErradas
+    
+    let showCorrect = false
+    let showIncorrect = false
+    let showVictory = false
+
     let correct = false
     if (value==this.state.result) {
       correct = true
@@ -65,26 +72,48 @@ export default class QuestionScreen extends Component {
 
     if (value>0) {
       if (correct) {
+        showCorrect = true
         numJogadas++
       } else {
+        showIncorrect = true
         numErradas++
       }
     }
 
     if (numJogadas==5) {
+      showCorrect = false
+      showVictory = true
+    }
+
+    this.setState({
+      numJogadas: numJogadas,
+      numErradas: numErradas,
+      answerCorrect: showCorrect,
+      answerIncorrect: showIncorrect,
+      answerLast: showVictory
+    })
+  }
+
+  goToNextQuestion() {
+    let showCorrect = false
+    let showIncorrect = false 
+    let showVictory = false
+
+    if (this.state.numJogadas==5) {
       this.props.navigation.goBack()
     }
 
     let newData = this.generateData()
 
     this.setState({
-      numJogadas: numJogadas,
-      numErradas: numErradas,
       numberX: newData.numberX,
       numberY: newData.numberY,
       operation: newData.operation,
       result: newData.result,
-      values: newData.values
+      values: newData.values,
+      answerCorrect: showCorrect,
+      answerIncorrect: showIncorrect,
+      answerLast: showVictory
     })
   }
 
@@ -289,26 +318,18 @@ export default class QuestionScreen extends Component {
   render() {
     let modalCorrect = <Modal    
                         animationType="slide"
-                        visible={/*this.state.answerCorrect*/true}
+                        visible={this.state.answerCorrect}
                         transparent>
                         <View style={styles.containerModal}>
                           <View style={styles.viewContentModal}>
                             <ModalCorrect numeroJogadas={this.state.numJogadas} />
-                            <View style={{flex: 1, padding: 10, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                            <View style={styles.viewForButton}>
                               <TouchableOpacity
                                 onPress={() => {
-
+                                  this.goToNextQuestion()
                                 }}
-                                style={{
-                                  backgroundColor: colorGreenDark,
-                                  height: '100%',
-                                  width: '100%',
-                                  borderRadius: 15,
-                                  justifyContent: 'center',
-                                  alignItems: 'center'
-                                }}
-                              >
-                               <Text style={{fontSize: 18, fontWeight: 'bold', color: white}}>CONTINUAR</Text> 
+                                style={styles.styleButton}>
+                               <Text style={styles.textButton}>CONTINUAR</Text> 
                               </TouchableOpacity>
                             </View>
                           </View>
@@ -317,22 +338,49 @@ export default class QuestionScreen extends Component {
 
     let modalIncorrect = <Modal    
                         animationType="slide"
-                        visible={/*this.state.answerIncorrect*/false}
+                        visible={this.state.answerIncorrect}
                         transparent>
                         <View style={styles.containerModal}>
                           <View style={styles.viewContentModal}>
                             <ModalIncorrect numeroJogadas={this.state.numJogadas} />
-                            <View style={{flex: 1, borderWidth: 1}}>
-                              
+                            <View style={styles.viewForButton}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.goToNextQuestion()
+                                }}
+                                style={styles.styleButton}>
+                               <Text style={styles.textButton}>CONTINUAR</Text> 
+                              </TouchableOpacity>
                             </View>
                           </View>
                         </View>
                       </Modal>
 
+    let modalVictory= <Modal    
+                        animationType="slide"
+                        visible={this.state.answerLast}
+                        transparent>
+                        <View style={styles.containerModal}>
+                          <View style={styles.viewContentModal}>
+                            <ModalVictory numeroJogadas={this.state.numJogadas} />
+                            <View style={styles.viewForButton}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.goToNextQuestion()
+                                }}
+                                style={styles.styleButton}>
+                              <Text style={styles.textButton}>CONTINUAR</Text> 
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                        </Modal>
+
     return (
       <View style={styles.safeView}>
         {modalCorrect}
         {modalIncorrect}
+        {modalVictory}
         <StatusBar barStyle="light-content" backgroundColor={colorPrimaryDark} />
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
@@ -530,5 +578,25 @@ const styles = StyleSheet.create({
     backgroundColor: white,
     borderRadius: 25,
     padding: 16
+  },
+  viewForButton: {
+    flex: 1, 
+    padding: 10, 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  styleButton: {
+    backgroundColor: colorGreenDark,
+    height: '100%',
+    width: '100%',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textButton: {
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    color: white
   }
 });
