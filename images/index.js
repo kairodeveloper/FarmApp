@@ -1,11 +1,12 @@
 /* GENERAL IMAGES */
-export const STARTIMAGE = require('./files/icons/icon_start.png');
-export const FARMIMAGE = require('./files/icons/icon_farm.png');
-export const PODIOIMAGE = require('./files/icons/icon_podio.png');
-export const SETTINGSIMAGE = require('./files/icons/icon_settings.png');
-export const RETURNIMAGE = require('./files/icons/icon_return.png');
+export const STARTIMAGE = require('./files/icons/icon_start.png')
+export const FARMIMAGE = require('./files/icons/icon_farm.png')
+export const PODIOIMAGE = require('./files/icons/icon_podio.png')
+export const SETTINGSIMAGE = require('./files/icons/icon_settings.png')
+export const RETURNIMAGE = require('./files/icons/icon_return.png')
 export const HAPPYFACEIMAGE = require('./files/icons/icon_happy_face.png')
 export const NEUTRALFACEIMAGE = require('./files/icons/icon_neutral_face.png')
+export const CHANGEAMBIENT = require('./files/icons/icon_change_ambient.png')
 
 /* CHARACTERS IMAGES */
 export const ICONCOWBOY = require('./files/icons/icon_cowboy.png');

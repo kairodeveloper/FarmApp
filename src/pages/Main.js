@@ -17,7 +17,7 @@ import {
   StatusBar
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen } from '../../colors';
-import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE } from '../../images'
+import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT } from '../../images'
 
 export default class Main extends Component {
   
@@ -37,10 +37,11 @@ export default class Main extends Component {
           <View style={styles.secondViewTop}>
             <Image source={PODIOIMAGE} style={styles.farmImageTop} />
             <Image source={SETTINGSIMAGE} style={styles.farmImageTop} />
+            <Image source={CHANGEAMBIENT} style={styles.farmImageTop} />
           </View>
           <View style={styles.firstView}>
             <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate('QuestionScreen')
+              this.props.navigation.navigate('SetName')
             }}>
               <Image source={STARTIMAGE} style={styles.startImage} />
             </TouchableOpacity>
@@ -82,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: colorGreen
   },
   startImage: {
-    height: 100,
-    width: 100
+    height: 150,
+    aspectRatio: 1
   },
   farmImageTop: {
     aspectRatio: 1,

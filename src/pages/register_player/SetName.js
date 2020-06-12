@@ -2,7 +2,7 @@ import React, { Component, AsyncStorage } from 'react'
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
+  FlatList,
   View,
   Text,
   TextInput,
@@ -27,6 +27,20 @@ export default class SetName extends Component {
 
   constructor(props) {
     super(props)
+
+    let jogadores = []
+
+    for (let index = 0; index < 10; index++) {
+      const element = {}
+      element.mid = index+1
+      element.nome = "Jogador "+(index+1)
+      
+      jogadores.push(element)
+    }
+
+    this.state = {
+      jogadores: jogadores
+    }    
   }
 
   render() {
@@ -41,29 +55,41 @@ export default class SetName extends Component {
               <Image source={RETURNIMAGE} style={styles.farmImageTop} />
             </TouchableOpacity>
           </View>
+          <Text style={{ marginStart: 16, fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>Crie um jogador :)</Text>
           <View style={styles.firstViewTop}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>PRIMEIRO DIGA O SEU NOME :)</Text>
             <View style={{
               height: 50,
-              width: '100%',
+              width: '75%',
               backgroundColor: white,
               borderRadius: 15,
-              marginTop: 6,
-              paddingStart: 6,
-              paddingEnd: 6
-            }}>
+              paddingStart: 16
+              }}>
               <TextInput
                 fontSize={16}
                 textColor={colorPrimary}
                 baseColor={colorPrimary}
-                placeholder={'Nome do aluno'}
+                placeholder={'Digite o nome...'}
                 onChangeText={(name) => this.setState({ name })}
               />
             </View>
+            <View style={{height: 50, width: '25%', backgroundColor: black}}>
+
+            </View>
+          </View>
+          <View style={styles.viewMiddle}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: colorPrimaryDark }}>Ou escolha um jogador</Text>
+            <FlatList
+              style={{flex: 1}}
+              data={this.state.jogadores}
+              renderItem={({ item }) => 
+                <View style={{height: 50,marginTop: 16,  borderWidth: 1}}>
+                  <Text>{item.nome}</Text>
+                </View>
+            }/>
           </View>
           <View style={styles.firstViewBottom}>
             <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate('SetCharacter')
+              //this.props.navigation.navigate('SetCharactr')
             }}
               style={{
                 height: 50,
@@ -101,14 +127,19 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary
   },
   firstViewTop: {
-    flex: 4,
+    flex: 1,
     padding: 16,
     paddingTop: 6,
-    backgroundColor: colorPrimary
+    flexDirection: 'row'
+  },
+  viewMiddle: {
+    flex: 5,
+    padding: 16,
+    paddingTop: 6,
   },
   firstViewBottom: {
     flexDirection: 'column-reverse',
-    flex: 4,
+    flex: 2,
     alignItems: 'center',
     padding: 16,
     backgroundColor: colorPrimary
@@ -116,7 +147,8 @@ const styles = StyleSheet.create({
   secondViewTop: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: colorPrimary
+    backgroundColor: colorPrimary,
+    marginTop: 16
   },
   secondViewBottom: {
     flex: 1,

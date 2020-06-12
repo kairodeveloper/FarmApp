@@ -369,7 +369,7 @@ export default class QuestionScreen extends Component {
                                   this.goToNextQuestion()
                                 }}
                                 style={styles.styleButton}>
-                              <Text style={styles.textButton}>CONTINUAR</Text> 
+                              <Text style={styles.textButton}>TERMINAR</Text> 
                               </TouchableOpacity>
                             </View>
                           </View>
@@ -527,7 +527,8 @@ const styles = StyleSheet.create({
   secondViewTop: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: colorPrimary
+    backgroundColor: colorPrimary,
+    marginTop: 16
   },
   secondViewBottom: {
     flex: 1,

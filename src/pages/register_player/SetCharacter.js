@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
   secondViewTop: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: colorPrimary
+    backgroundColor: colorPrimary,
+    marginTop: 16
   },
   secondViewBottom: {
     flex: 1,
