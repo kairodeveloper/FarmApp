@@ -30,3 +30,4 @@ export const PLUSICONGREY = require('./files/icons/icon_plus_grey.png');
 export const MINUSICONGREY = require('./files/icons/icon_minus_grey.png');
 export const DIVISIONICONGREY = require('./files/icons/icon_division_grey.png');
 export const TIMESICONGREY = require('./files/icons/icon_times_grey.png');
+export const PLUSICONBLUE = require('./files/icons/icon_plus.png')

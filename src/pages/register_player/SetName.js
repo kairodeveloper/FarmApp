@@ -16,8 +16,10 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black } from '../../../colors';
-import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE } from '../../../images'
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red } from '../../../colors';
+import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE } from '../../../images'
+
+const ModalNewPlayer = require('../../modals/ModalNewPlayer')
 
 export default class SetName extends Component {
 
@@ -30,22 +32,88 @@ export default class SetName extends Component {
 
     let jogadores = []
 
-    for (let index = 0; index < 10; index++) {
-      const element = {}
-      element.mid = index+1
-      element.nome = "Jogador "+(index+1)
-      
-      jogadores.push(element)
-    }
-
     this.state = {
-      jogadores: jogadores
+      jogadores: jogadores,
+      jogadorSelecionado: 0,
+      name: "",
+      showModalName: false
     }    
   }
 
+  addNewJogador() {
+    let jogadores = this.state.jogadores
+                                  
+    jogadores.map((it) => {
+      it.selecionado = false
+    })
+
+    let newJogador = {}
+    newJogador.mid = this.state.jogadores.length+1
+    newJogador.nome = this.state.name
+    newJogador.selecionado = true
+    
+    jogadores.push(newJogador)
+
+    this.setState({
+      jogadorSelecionado: newJogador.mid,
+      jogadores: jogadores,
+      showModalName: false
+    })
+  }
+
+  selectJogador(mid) {
+    let jogadores = this.state.jogadores
+                                  
+    jogadores.map((it) => {
+      it.selecionado = it.mid==mid
+    })
+
+    this.setState({
+      jogadores: jogadores
+    })
+  }
+
   render() {
+    let modalName = <Modal    
+                        animationType="slide"
+                        visible={this.state.showModalName}
+                        transparent>
+                        <View style={styles.containerModal}>
+                          <View style={styles.viewContentModal}>
+                            <ModalNewPlayer numeroJogadas={this.state.numJogadas} />
+                            <View style={styles.viewForTextInput}>
+                              <TextInput
+                                fontSize={18}
+                                textColor={colorPrimaryDark}
+                                baseColor={colorPrimaryDark}
+                                placeholder={'Digite o nome...'}
+                                onChangeText={(name) => this.setState({ name })}
+                              />
+                            </View>
+                            <View style={styles.viewForButton}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.addNewJogador()
+                                }}
+                                style={styles.styleButton}>
+                              <Text style={styles.textButton}>SALVAR</Text> 
+                              </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity 
+                              style={{alignItems: 'center', justifyContent: 'center', height: 25}}
+                              onPress={() => {
+                                this.setState({
+                                  showModalName: false
+                                })
+                              }}>
+                              <Text style={{color: red, fontWeight: 'bold'}}>fechar</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </Modal>
     return (
       <View style={styles.safeView}>
+        {modalName}
         <StatusBar barStyle="light-content" backgroundColor={colorPrimaryDark} />
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
@@ -55,39 +123,60 @@ export default class SetName extends Component {
               <Image source={RETURNIMAGE} style={styles.farmImageTop} />
             </TouchableOpacity>
           </View>
-          <Text style={{ marginStart: 16, fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>Crie um jogador :)</Text>
+          <View style={styles.viewMiddle}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Escolha um jogador</Text>
+            { this.state.jogadores.length==0 ? (
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{fontSize: 18, color: colorPrimaryDark}}>Não há nenhum jogador registrado...</Text>
+              </View>
+            ) : (
+              <FlatList
+                style={{flex: 1}}
+                data={this.state.jogadores}
+                renderItem={({ item }) => 
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.selectJogador(item.mid)
+                    }}
+                    style={
+                      item.selecionado ? (
+                        {height: 60, borderWidth: 4, borderColor: colorPrimaryDark, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white} 
+                      ) : (
+                        {height: 50, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white}  
+                      )}>
+                    <Text style={ item.selecionado ? ( 
+                      {fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', color: colorPrimaryDark}
+                    ) : (
+                      {fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}                    
+                    )}>{item.nome}</Text>
+                  </TouchableOpacity>
+              }/>
+          ) }
+          </View>
+          
           <View style={styles.firstViewTop}>
             <View style={{
               height: 50,
-              width: '75%',
-              backgroundColor: white,
+              width: '80%',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
               borderRadius: 15,
               paddingStart: 16
               }}>
-              <TextInput
-                fontSize={16}
-                textColor={colorPrimary}
-                baseColor={colorPrimary}
-                placeholder={'Digite o nome...'}
-                onChangeText={(name) => this.setState({ name })}
-              />
+              <Text style={{ marginEnd: 16, fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Crie um jogador</Text>
             </View>
-            <View style={{height: 50, width: '25%', backgroundColor: black}}>
-
-            </View>
+            <TouchableOpacity 
+              style={{height: 50, width: '20%', justifyContent: 'center', alignItems: 'center', borderColor: colorPrimaryDark, borderWidth: 3, borderRadius: 15}}
+              onPress={() => {
+                this.setState({
+                  showModalName: true
+                })
+              }}>
+              <Image source={PLUSICONBLUE} style={{height: 32, width: 32}} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.viewMiddle}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: colorPrimaryDark }}>Ou escolha um jogador</Text>
-            <FlatList
-              style={{flex: 1}}
-              data={this.state.jogadores}
-              renderItem={({ item }) => 
-                <View style={{height: 50,marginTop: 16,  borderWidth: 1}}>
-                  <Text>{item.nome}</Text>
-                </View>
-            }/>
-          </View>
-          <View style={styles.firstViewBottom}>
+          
+          {/*<View style={styles.firstViewBottom}>
             <TouchableOpacity onPress={() => {
               //this.props.navigation.navigate('SetCharactr')
             }}
@@ -106,6 +195,7 @@ export default class SetName extends Component {
 
             </TouchableOpacity>
           </View>
+            */}
           <View style={styles.secondViewBottom}>
             <Image source={FARMIMAGE} style={styles.farmImageBottom} />
           </View>
@@ -133,9 +223,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   viewMiddle: {
-    flex: 5,
+    flex: 6,
     padding: 16,
     paddingTop: 6,
+  },
+  containerModal: {
+    flex: 1,
+    backgroundColor: blackSemiTransparent,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  viewContentModal: {
+    height: 250,
+    width: '75%',
+    backgroundColor: white,
+    borderRadius: 25,
+    padding: 16
+  },
+  viewForTextInput: {
+    flex: 2,
+    padding: 10, 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },        
+  viewForButton: {
+    flex: 1, 
+    padding: 10, 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  styleButton: {
+    backgroundColor: colorGreenDark,
+    height: '100%',
+    width: '100%',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textButton: {
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    color: white
   },
   firstViewBottom: {
     flexDirection: 'column-reverse',

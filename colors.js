@@ -1,6 +1,7 @@
 // GLOBAL COLORS
 export const black = "#000"
 export const white = "#FFF"
+export const red = "#993300"
 
 // PERSONAL COLORS
 export const colorPrimary = "#80c8e5"
