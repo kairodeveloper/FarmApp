@@ -36,7 +36,7 @@ export default class Main extends Component {
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
             <Image source={PODIOIMAGE} style={styles.farmImageTop} />
-            <Image source={SETTINGSIMAGE} style={styles.farmImageTop} />
+            {/*<Image source={SETTINGSIMAGE} style={styles.farmImageTop} />*/}
             <Image source={CHANGEAMBIENT} style={styles.farmImageTop} />
           </View>
           <View style={styles.firstView}>

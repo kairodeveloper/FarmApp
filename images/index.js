@@ -24,6 +24,15 @@ export const ICONFAZENDEIRALOCKED = require('./files/icons/icon_fazendeira_locke
 
 /* ANIMAL ICONS */
 export const ICONCAMARAO = require('./files/icons/ic_carcinicultura.png')
+export const ICONVACA = require('./files/icons/animals/icon_vaca.png')
+export const ICONPASSARO = require('./files/icons/animals/icon_passaro.png')
+export const ICONPORCO = require('./files/icons/animals/icon_porco.png')
+export const ICONGALINHA = require('./files/icons/animals/icon_galinha.png')
+export const ICONOVELHA = require('./files/icons/animals/icon_ovelha.png')
+export const ICONSAPO = require('./files/icons/animals/icon_sapo.png')
+export const ICONCACHORRO = require('./files/icons/animals/icon_cachorro.png')
+export const ICONPEIXE = require('./files/icons/animals/icon_peixe.png')
+export const ICONTARTARUGA = require('./files/icons/animals/icon_tartaruga.png')
 
 /* OPERATIONS IMAGES */
 export const PLUSICONGREY = require('./files/icons/icon_plus_grey.png');

@@ -16,8 +16,9 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black } from '../../../colors';
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY } from '../../../images'
+import { isIn } from '../../globalComponents/GlobalFunctions';
 
 export default class SelectOperations extends Component {
 
@@ -27,7 +28,53 @@ export default class SelectOperations extends Component {
 
   constructor(props) {
     super(props)
+    const { navigation } = this.props
+
+    let data = navigation.getParam('data', {})
+    let selecionados = [1]
+
+    this.state = {
+      selecionados: selecionados,
+      data: data
+    }
   }
+
+  setSelecionado(position) {
+    let selecionados = this.state.selecionados
+    let retorno = []
+
+    if (isIn(position, selecionados)) {
+      selecionados.map((it) => {
+        if (it!=position) {
+          retorno.push(it)
+        }
+      })
+    } else {
+      selecionados.map((it) => {
+        retorno.push(it)
+      })
+
+      retorno.push(position)
+    }
+
+    this.setState({
+      selecionados: retorno
+    })
+  }
+
+  isSelecionado(position) {
+    let selecionados = this.state.selecionados
+    let retorno = false
+
+    selecionados.map((it) => {
+      if (it==position) {
+        retorno = true
+      }
+    })
+
+    return retorno
+  }
+
 
   render() {
     return (
@@ -44,7 +91,6 @@ export default class SelectOperations extends Component {
           <View style={styles.firstViewTop}>
                 <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>SELECIONE AS OPERAÇÕES</Text>
                 <View style={{
-                    flex: 1,
                     width: '100%',
                     backgroundColor: white,
                     borderRadius: 15,
@@ -52,26 +98,46 @@ export default class SelectOperations extends Component {
                     padding: 6
                 }}>
                     <View style={styles.lineCharacterView}>
-                        <TouchableOpacity style={styles.characterView}> 
+                        <TouchableOpacity 
+                          onPress={() => {
+                            this.setSelecionado(1)
+                          }}
+                          style={[styles.characterView, {backgroundColor: this.isSelecionado(1) ? purple : white}]}> 
                             <Image source={PLUSICONGREY} style={styles.characterIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}> 
+                        <TouchableOpacity 
+                          onPress={() => {
+                            this.setSelecionado(2)
+                          }}
+                          style={[styles.characterView, {backgroundColor: this.isSelecionado(2) ? purple : white}]}> 
                             <Image source={MINUSICONGREY} style={styles.characterIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}> 
+                        <TouchableOpacity 
+                          onPress={() => {
+                            this.setSelecionado(3)
+                          }}
+                          style={[styles.characterView, {backgroundColor: this.isSelecionado(3) ? purple : white}]}> 
                             <Image source={TIMESICONGREY} style={styles.characterIcon} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}> 
+                        <TouchableOpacity 
+                          onPress={() => {
+                            this.setSelecionado(4)
+                          }}
+                          style={[styles.characterView, {backgroundColor: this.isSelecionado(4) ? purple : white}]}> 
                             <Image source={DIVISIONICONGREY} style={styles.characterIcon} />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.lineCharacterView} />
-                    <View style={styles.lineCharacterView} />
 
                 </View>
           </View>
           <View style={styles.firstViewBottom}>
-                <View style={{
+                <TouchableOpacity onPress={() => {
+                  let data = this.state.data
+                  data.operations = this.state.selecionados
+                  this.props.navigation.replace('QuestionScreen', { data: data })
+                }}
+                  
+                  style={{
                     height: 50,
                     width: '60%',
                     backgroundColor: white,
@@ -82,8 +148,8 @@ export default class SelectOperations extends Component {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>SEGUINTE</Text>
-                </View>
+                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>JOGAR</Text>
+                </TouchableOpacity>
           </View>
           <View style={styles.secondViewBottom}>
             <Image source={FARMIMAGE} style={styles.farmImageBottom} />
@@ -119,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary
   },
   secondViewTop: {
-    flex: 1,
+    height: 50,
     flexDirection: 'row',
     backgroundColor: colorPrimary
   },
@@ -133,7 +199,7 @@ const styles = StyleSheet.create({
     width: 100
   },
   lineCharacterView: {
-      flex: 1, 
+      height: 100,
       flexDirection: 'row'
     },
   characterView: {
@@ -141,8 +207,7 @@ const styles = StyleSheet.create({
     margin: 6,
     borderRadius: 15, 
     justifyContent: 'center', 
-    alignItems: 'center', 
-    backgroundColor: '#DFDFDF'
+    alignItems: 'center'
   },
   characterIcon: {
     height: '75%',

@@ -29,6 +29,7 @@ export default class SetName extends Component {
 
   constructor(props) {
     super(props)
+    const { navigation } = this.props
 
     let jogadores = []
 
@@ -63,14 +64,15 @@ export default class SetName extends Component {
 
   selectJogador(mid) {
     let jogadores = this.state.jogadores
-                                  
+    let jogador = {}
+
     jogadores.map((it) => {
-      it.selecionado = it.mid==mid
+      if (it.mid==mid) {
+        jogador = it
+      }
     })
 
-    this.setState({
-      jogadores: jogadores
-    })
+    this.props.navigation.replace('SetCharacter', {jogador: jogador})  
   }
 
   render() {
@@ -145,7 +147,7 @@ export default class SetName extends Component {
                         {height: 50, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white}  
                       )}>
                     <Text style={ item.selecionado ? ( 
-                      {fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', color: colorPrimaryDark}
+                      {fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}
                     ) : (
                       {fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}                    
                     )}>{item.nome}</Text>
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary
   },
   secondViewTop: {
-    flex: 1,
+    height: 50,
     flexDirection: 'row',
     backgroundColor: colorPrimary,
     marginTop: 16

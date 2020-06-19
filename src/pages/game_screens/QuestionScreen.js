@@ -18,6 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent, colorGreenDark } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO } from '../../../images'
+import { isIn, getImageByCode } from '../../globalComponents/GlobalFunctions';
 
 const BUTTON_A_TAG = 'a-btn'
 const BUTTON_B_TAG = 'b-btn'
@@ -35,21 +36,25 @@ export default class QuestionScreen extends Component {
 
   constructor(props) {
     super(props)
+    const { navigation } = this.props
+    let data = navigation.getParam('data', {})
 
     this.state = {
-        statusButtonA: false,
-        statusButtonB: false,
-        statusButtonC: false,
-        answerCorrect: false,
-        answerIncorrect: false,
-        answerLast: false,
-        numJogadas: 0,
-        numErradas: 0,
-        numberX: 0,
-        numberY: 0,
-        operation: 0,
-        result: 0,
-        values: []
+      data: data,
+      statusButtonA: false,
+      statusButtonB: false,
+      statusButtonC: false,
+      answerCorrect: false,
+      answerIncorrect: false,
+      answerLast: false,
+      numJogadas: 0,
+      numErradas: 0,
+      numberX: 0,
+      numberY: 0,
+      operation: 0,
+      result: 0,
+      values: [],
+      valueImage: 0
     }
   }
 
@@ -113,14 +118,16 @@ export default class QuestionScreen extends Component {
       values: newData.values,
       answerCorrect: showCorrect,
       answerIncorrect: showIncorrect,
-      answerLast: showVictory
+      answerLast: showVictory,
+      valueImage: newData.valueImage
     })
   }
 
   generateData() {
-    let operation = this.getRandomInt(0, 64)
+    let operation = this.getOperationValue()
     let symbol = this.getOperationSymbol(operation)
-    
+    let valueImage = this.getAnimalForQuestion()
+
     let numbers = this.getRandomIntForOperation(1, 11, symbol)
     let numberX = numbers.x
     let numberY = numbers.y
@@ -133,8 +140,27 @@ export default class QuestionScreen extends Component {
       numberY: numberY,
       operation: symbol,
       result: result.result,
-      values: values
+      values: values,
+      valueImage: valueImage
     })
+  }
+
+  getOperationValue() {
+    let values = [
+      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 
+      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 
+      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
+      1, 2, 3, 4
+    ]
+
+    let retorno = 0
+    let x = 0
+    do {
+      x = this.getRandomInt(0, 64)
+      retorno = values[x]
+    } while (!isIn(retorno, this.state.data.operations));
+
+    return x
   }
 
   getShuffle(array) {
@@ -250,23 +276,31 @@ export default class QuestionScreen extends Component {
 
   getOperationSymbol(number) {
       let symbols = [PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                        MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,PLUSICONGREY, 
-                        TIMESICONGREY, DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, 
-                        DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY,
-                        PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                        MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,PLUSICONGREY, 
-                        TIMESICONGREY, DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, 
-                        DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY,
-                        PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                        MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,PLUSICONGREY, 
-                        TIMESICONGREY, DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, 
-                        DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY,
-                        PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                        MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,PLUSICONGREY, 
-                        TIMESICONGREY, DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, 
-                        DIVISIONICONGREY, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY
                     ]
       return symbols[number]
+  }
+
+  getAnimalForQuestion() {
+    let valueY = this.state.data.animals.length
+    let value = this.getRandomInt(0, valueY)
+    let valueImage = this.state.data.animals[value]
+    
+    return valueImage
   }
 
   getColumnsAndLines(number) {
@@ -280,10 +314,10 @@ export default class QuestionScreen extends Component {
                     rows.push(
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={ICONCAMARAO} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={ICONCAMARAO} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                         </View>
                     )
@@ -291,7 +325,7 @@ export default class QuestionScreen extends Component {
                     rows.push(
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={ICONCAMARAO} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} />
                         </View>
@@ -304,7 +338,7 @@ export default class QuestionScreen extends Component {
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{aspectRatio: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={ICONCAMARAO} style={{height: '75%', aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage)} style={{height: '75%', aspectRatio: 1}} />
                             </View>
                         </View>
                     </View>
@@ -391,7 +425,7 @@ export default class QuestionScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.firstViewTop}>
-                <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>MOSTRE SEU CONHECIMENTO ^^</Text>
+                <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>Mostre seu conhecimento ^^</Text>
                 <View style={{
                     flex: 1,
                     width: '100%',
@@ -525,7 +559,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary
   },
   secondViewTop: {
-    flex: 1,
+    height: 50,
     flexDirection: 'row',
     backgroundColor: colorPrimary,
     marginTop: 16

@@ -16,7 +16,7 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black } from '../../../colors';
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED } from '../../../images'
 
 export default class SetCharacter extends Component {
@@ -27,6 +27,16 @@ export default class SetCharacter extends Component {
 
   constructor(props) {
     super(props)
+    const { navigation } = this.props
+
+    let jogador = navigation.getParam('jogador', {})     
+    let liberados = [1, 2]
+
+    this.state = {
+      jogador: jogador,
+      characterSelected: 1,
+      maiorLiberado: liberados[liberados.length-1]
+    }
   }
 
   render() {
@@ -42,57 +52,117 @@ export default class SetCharacter extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.firstViewTop}>
-                <Text style={{fontSize: 22, fontWeight: 'bold', color: colorPrimaryDark}}>SELECIONE O SEU PERSONAGEM</Text>
-                <View style={{
-                    flex: 1,
-                    width: '100%',
-                    backgroundColor: white,
-                    borderRadius: 15,
-                    marginTop: 16,
-                    padding: 6
-                }}>
-                    <View style={styles.lineCharacterView}>
-                        <TouchableOpacity style={styles.characterView}> 
-                            <Image source={ICONCOWBOY} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}> 
-                            <Image source={ICONCOWGIRL} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}> 
-                            <Image source={ICONENGENHEIROLOCKED} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.lineCharacterView}>
-                        <TouchableOpacity style={styles.characterView}> 
-                            <Image source={ICONENGENHEIRALOCKED} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}>
-                            <Image source={ICONFAZENDEIROLOCKED} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.characterView}>
-                            <Image source={ICONFAZENDEIRALOCKED} style={styles.characterIcon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.lineCharacterView} />
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Selecione o seu personagem</Text>
+            <View style={{
+              flex: 1,
+              width: '100%',
+              backgroundColor: white,
+              borderRadius: 15,
+              marginTop: 16,
+              padding: 6
+            }}>
+              <View style={styles.lineCharacterView}>
+                <TouchableOpacity 
+                  onPress={() => {
+                    this.setState({
+                      characterSelected: 1
+                    })
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==1 ? purple : white }]}>
+                  <Image source={ICONCOWBOY} style={styles.characterIcon} />
+                </TouchableOpacity>
+                
+                <TouchableOpacity  
+                  onPress={() => {
+                    this.setState({
+                      characterSelected: 2
+                    })
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==2 ? purple : white }]}>
+                  <Image source={ICONCOWGIRL} style={styles.characterIcon} />
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  onPress={() => {
+                    if (this.state.maiorLiberado >= 3) {
+                      this.setState({
+                        characterSelected: 3
+                      })  
+                    } else {
+                      alert('Ganhe mais uma partida para desbloquar o personagem')
+                    }
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==3 ? purple : white }]}>
+                  <Image source={this.state.maiorLiberado < 3 ? ICONENGENHEIROLOCKED : ICONENGENHEIRO} style={styles.characterIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.lineCharacterView}>
+                <TouchableOpacity 
+                  onPress={() => {
+                    if (this.state.maiorLiberado >= 3) {
+                      this.setState({
+                        characterSelected: 4
+                      })
+                    } else {
+                      alert('Ganhe mais duas partidas para desbloquar o personagem')
+                    }
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==4 ? purple : white }]}> 
+                  <Image source={this.state.maiorLiberado < 4 ? ICONENGENHEIRALOCKED : ICONENGENHEIRA} style={styles.characterIcon} />
+                </TouchableOpacity>
 
-                </View>
+                <TouchableOpacity 
+                  onPress={() => {
+                    if (this.state.maiorLiberado >= 3) {
+                        this.setState({
+                        characterSelected: 5
+                      })
+                    } else {
+                      alert('Ganhe mais três partidas para desbloquar o personagem')
+                    }
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==5 ? purple : white }]}>
+                  <Image source={this.state.maiorLiberado < 5 ? ICONFAZENDEIRALOCKED : ICONFAZENDEIRO} style={styles.characterIcon} />
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  onPress={() => {
+                    if (this.state.maiorLiberado >= 3) {
+                      this.setState({
+                        characterSelected: 6
+                      })
+                    } else {
+                      alert('Ganhe mais quatro partidas para desbloquar o personagem')
+                    }
+                  }}
+                  style={[styles.characterView, {backgroundColor: this.state.characterSelected==6 ? purple : white }]}>
+                  <Image source={this.state.maiorLiberado < 6 ? ICONFAZENDEIRALOCKED : ICONFAZENDEIRA} style={styles.characterIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.lineCharacterView} />
+
+            </View>
           </View>
           <View style={styles.firstViewBottom}>
             <TouchableOpacity onPress={() => {
-                this.props.navigation.navigate('SelectAnimals')
-              }} 
+              let data = {}
+              data.jogador = this.state.jogador
+              data.characterSelected = this.state.characterSelected
+
+              this.props.navigation.replace('SelectAnimals', {data: data})
+            }}
               style={{
-                  height: 50,
-                  width: '60%',
-                  backgroundColor: white,
-                  borderRadius: 15,
-                  marginBottom: 56,
-                  borderWidth: 1,
-                  borderColor: colorPrimaryDark,
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                height: 50,
+                width: '60%',
+                backgroundColor: white,
+                borderRadius: 15,
+                marginBottom: 56,
+                borderWidth: 1,
+                borderColor: colorPrimaryDark,
+                justifyContent: 'center',
+                alignItems: 'center'
               }}>
-              <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>SEGUINTE</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>SEGUINTE</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.secondViewBottom}>
@@ -118,7 +188,6 @@ const styles = StyleSheet.create({
   firstViewTop: {
     flex: 4,
     padding: 16,
-    paddingTop: 6,
     backgroundColor: colorPrimary
   },
   firstViewBottom: {
@@ -129,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary
   },
   secondViewTop: {
-    flex: 1,
+    height: 50,
     flexDirection: 'row',
     backgroundColor: colorPrimary,
     marginTop: 16
@@ -144,16 +213,15 @@ const styles = StyleSheet.create({
     width: 100
   },
   lineCharacterView: {
-      flex: 1, 
-      flexDirection: 'row'
-    },
+    flex: 1,
+    flexDirection: 'row'
+  },
   characterView: {
-    flex: 1, 
+    flex: 1,
     margin: 6,
-    borderRadius: 15, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    backgroundColor: '#DFDFDF'
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   characterIcon: {
     height: '75%',
