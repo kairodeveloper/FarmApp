@@ -17,8 +17,9 @@ import {
   StatusBar
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent, colorGreenDark } from '../../../colors';
-import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO } from '../../../images'
+import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO, ICONDICA } from '../../../images'
 import { isIn, getImageByCode } from '../../globalComponents/GlobalFunctions';
+import { updateThis, getNextMid, saveThis } from '../../../realm_services/RealmService';
 
 const BUTTON_A_TAG = 'a-btn'
 const BUTTON_B_TAG = 'b-btn'
@@ -27,6 +28,7 @@ const BUTTON_C_TAG = 'c-btn'
 const ModalCorrect = require('../../modals/ModalCorrect')
 const ModalIncorrect = require('../../modals/ModalIncorrect')
 const ModalVictory = require('../../modals/ModalVictory')
+const ModalSimples = require('../../modals/ModalSimples')
 
 export default class QuestionScreen extends Component {
 
@@ -47,6 +49,7 @@ export default class QuestionScreen extends Component {
       answerCorrect: false,
       answerIncorrect: false,
       answerLast: false,
+      modalTip: false,
       numJogadas: 0,
       numErradas: 0,
       numberX: 0,
@@ -82,6 +85,7 @@ export default class QuestionScreen extends Component {
       } else {
         showIncorrect = true
         numErradas++
+        numJogadas++
       }
     }
 
@@ -105,7 +109,7 @@ export default class QuestionScreen extends Component {
     let showVictory = false
 
     if (this.state.numJogadas==5) {
-      this.props.navigation.goBack()
+      this.saveAndCloseWindow()
     }
 
     let newData = this.generateData()
@@ -349,6 +353,27 @@ export default class QuestionScreen extends Component {
         return rows
   }
 
+  saveAndCloseWindow() {
+    let qtsCertas = this.state.numJogadas-this.state.numErradas
+
+    let usuario = {}
+    usuario.mid = this.state.data.jogador.mid
+    usuario.numeroQuestoes = this.state.data.jogador.numeroQuestoes+qtsCertas
+    updateThis('Usuario', usuario, ['numeroQuestoes'])
+
+    let partida = {}
+    partida.mid = getNextMid('Partida')
+    partida.jogador = this.state.data.jogador.mid
+    partida.imageJogador = this.state.data.characterSelected
+    partida.totalQuestoes = this.state.numJogadas
+    partida.questoesCorretas = qtsCertas
+    partida.createdAt = new Date()
+    
+    saveThis('Partida', partida)
+
+    this.props.navigation.goBack()
+  }
+
   render() {
     let modalCorrect = <Modal    
                         animationType="slide"
@@ -410,22 +435,70 @@ export default class QuestionScreen extends Component {
                         </View>
                         </Modal>
 
+    let modalTip = <Modal    
+                    animationType="slide"
+                    visible={this.state.modalTip}
+                    transparent>
+                    <View style={styles.containerModal}>
+                      <View style={styles.viewContentModalLittle}>
+                        <View style={{height: 24, flexDirection: 'row-reverse'}}>
+                          <TouchableOpacity onPress={() => {
+                            this.setState({
+                              modalTip: false
+                            })
+                          }}>
+                            <Image source={TIMESICONGREY} style={{height: 24, width: 24}} />
+                          </TouchableOpacity>
+                        </View>
+                        <ModalSimples valueX={this.state.numberX}
+                                    operation={this.state.operation}
+                                    valueY={this.state.numberY} />
+
+                        <View style={{height: 24, flexDirection: 'row-reverse'}}/>
+                      </View>
+                    </View>
+                    </Modal>
+
+    {/*5-this.props.numeroJogadas*/}
+
     return (
       <View style={styles.safeView}>
         {modalCorrect}
         {modalIncorrect}
         {modalVictory}
+        {modalTip}
         <StatusBar barStyle="light-content" backgroundColor={colorPrimaryDark} />
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
-            <TouchableOpacity onPress={() => {
-              this.props.navigation.goBack()
-            }}>
-              <Image source={RETURNIMAGE} style={styles.farmImageTop} />
-            </TouchableOpacity>
+            <View style={{flex: 1}}>
+              <TouchableOpacity onPress={() => {
+                Alert.alert(
+                  'A partida está em andamento',
+                  'Deseja encerrá-la?',
+                  [
+                    { text: 'NÃO', onPress: () => console.log('OK Pressed') },
+                    { text: 'SIM', onPress: () => this.saveAndCloseWindow() }
+                  ])
+              }}>
+                <Image source={RETURNIMAGE} style={styles.farmImageTop} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{flex: 1, flexDirection: 'row-reverse'}}>
+              <TouchableOpacity onPress={() => {
+                this.setState({
+                  modalTip: true
+                })
+              }}>
+                <Image source={ICONDICA} style={styles.secondFarmImageTop} />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.firstViewTop}>
                 <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>Mostre seu conhecimento ^^</Text>
+                <Text>{this.state.data.characterSelected}</Text>
+                <Text>{this.state.numErradas} - {this.state.numJogadas}</Text>
+                <Text>{this.state.data.jogador.nome} - {this.state.data.jogador.mid} - {this.state.data.jogador.numeroQuestoes}</Text>
                 <View style={{
                     flex: 1,
                     width: '100%',
@@ -434,6 +507,7 @@ export default class QuestionScreen extends Component {
                     marginTop: 16,
                     padding: 16
                 }}>
+                  {/*https://www.youtube.com/watch?v=LxpKSJIbraA */}
                     <View style={styles.lineCharacterView}>
                         <View style={{flex: 2, flexDirection: 'column'}}>
                             {this.getColumnsAndLines(this.state.numberX)}
@@ -586,7 +660,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   characterIcon: {
-    width: '50%',
+    height: '25%',
     aspectRatio: 1
   },
   farmImageTop: {
@@ -594,6 +668,12 @@ const styles = StyleSheet.create({
     width: 32,
     marginTop: 10,
     marginStart: 16
+  },
+  secondFarmImageTop: {
+    height: 32,
+    width: 32,
+    marginTop: 10,
+    marginEnd: 16
   },
   farmImageBottom: {
     marginEnd: 32,
@@ -609,6 +689,13 @@ const styles = StyleSheet.create({
   },
   viewContentModal: {
     height: '45%',
+    width: '75%',
+    backgroundColor: white,
+    borderRadius: 25,
+    padding: 16
+  },
+  viewContentModalLittle: {
+    height: '25%',
     width: '75%',
     backgroundColor: white,
     borderRadius: 25,

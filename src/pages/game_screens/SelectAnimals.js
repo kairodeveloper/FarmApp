@@ -39,34 +39,24 @@ export default class SelectAnimals extends Component {
     }
   }
 
-  isIn(position, list) {
-    let retorno = false
-
-    list.map((it) => {
-      if (it == position) {
-        retorno = true
-      }
-    })
-
-    return retorno
-  }
-
   setSelecionado(position) {
     let selecionados = this.state.selecionados
     let retorno = []
 
     if (isIn(position, selecionados)) {
-      selecionados.map((it) => {
-        if (it != position) {
-          retorno.push(it)
-        }
-      })
+      if (selecionados.length>1) {
+        selecionados.map((it) => {
+          if (it != position) {
+            retorno.push(it)
+          }
+        })  
+      }
     } else {
       selecionados.map((it) => {
         retorno.push(it)
       })
 
-      retorno.push(position)
+      retorno.push(position)  
     }
 
     this.setState({
@@ -182,24 +172,28 @@ export default class SelectAnimals extends Component {
             </View>
           </View>
           <View style={styles.firstViewBottom}>
-            <TouchableOpacity onPress={() => {
-              let data = this.state.data
-              data.animals = this.state.selecionados
-              this.props.navigation.replace('SelectOperations', { data: data })
-            }}
-              style={{
-                height: 50,
-                width: '60%',
-                backgroundColor: white,
-                borderRadius: 15,
-                marginBottom: 56,
-                borderWidth: 1,
-                borderColor: colorPrimaryDark,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>SEGUINTE</Text>
-            </TouchableOpacity>
+            { this.state.selecionados.length >=1 ? (
+              <TouchableOpacity onPress={() => {
+                let data = this.state.data
+                data.animals = this.state.selecionados
+                this.props.navigation.replace('SelectOperations', { data: data })
+              }}
+                style={{
+                  height: 50,
+                  width: '60%',
+                  backgroundColor: white,
+                  borderRadius: 15,
+                  marginBottom: 56,
+                  borderWidth: 1,
+                  borderColor: colorPrimaryDark,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>SEGUINTE</Text>
+              </TouchableOpacity>
+            ) : (
+              <View />
+            ) }
           </View>
           <View style={styles.secondViewBottom}>
             <Image source={FARMIMAGE} style={styles.farmImageBottom} />

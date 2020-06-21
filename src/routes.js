@@ -7,6 +7,7 @@ import SetCharacter from './pages/register_player/SetCharacter';
 import SelectAnimals from './pages/game_screens/SelectAnimals';
 import SelectOperations from './pages/game_screens/SelectOperations';
 import QuestionScreen from './pages/game_screens/QuestionScreen';
+import ResultsScreen from './pages/game_screens/ResultsScreen';
 
 const navigationOptions = {
     headerTitleStyle: {
@@ -45,6 +46,10 @@ const RootStack = createStackNavigator({
     },
     QuestionScreen: {
         screen: QuestionScreen,
+        navigationOptions: navigationOptions
+    },
+    ResultsScreen: {
+        screen: ResultsScreen,
         navigationOptions: navigationOptions
     }
 },{

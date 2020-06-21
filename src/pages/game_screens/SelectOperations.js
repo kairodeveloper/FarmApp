@@ -131,25 +131,29 @@ export default class SelectOperations extends Component {
                 </View>
           </View>
           <View style={styles.firstViewBottom}>
-                <TouchableOpacity onPress={() => {
-                  let data = this.state.data
-                  data.operations = this.state.selecionados
-                  this.props.navigation.replace('QuestionScreen', { data: data })
-                }}
-                  
-                  style={{
-                    height: 50,
-                    width: '60%',
-                    backgroundColor: white,
-                    borderRadius: 15,
-                    marginBottom: 56,
-                    borderWidth: 1,
-                    borderColor: colorPrimaryDark,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>JOGAR</Text>
-                </TouchableOpacity>
+            { this.state.selecionados.length >=1 ? (
+              <TouchableOpacity onPress={() => {
+                let data = this.state.data
+                data.operations = this.state.selecionados
+                this.props.navigation.replace('QuestionScreen', { data: data })
+              }}
+                
+                style={{
+                  height: 50,
+                  width: '60%',
+                  backgroundColor: white,
+                  borderRadius: 15,
+                  marginBottom: 56,
+                  borderWidth: 1,
+                  borderColor: colorPrimaryDark,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+              }}>
+                <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>JOGAR</Text>
+              </TouchableOpacity>
+            ) : (
+              <View />
+            )}
           </View>
           <View style={styles.secondViewBottom}>
             <Image source={FARMIMAGE} style={styles.farmImageBottom} />

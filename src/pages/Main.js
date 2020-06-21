@@ -18,6 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen } from '../../colors';
 import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT } from '../../images'
+import { removeAll } from '../../realm_services/RealmService';
 
 export default class Main extends Component {
   
@@ -27,6 +28,8 @@ export default class Main extends Component {
   
   constructor(props) {
     super(props)
+
+    //removeAll()
   }
 
   render() {
@@ -35,9 +38,21 @@ export default class Main extends Component {
         <StatusBar barStyle="light-content" backgroundColor={colorPrimaryDark} />
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
-            <Image source={PODIOIMAGE} style={styles.farmImageTop} />
+            <TouchableOpacity onPress={() => {
+                this.props.navigation.navigate('ResultsScreen')
+              }}
+              style={{marginTop: 16, marginStart: 10, height: 50, width: 50}}
+            >
+              <Image source={PODIOIMAGE} style={styles.farmImageTop} />
+            </TouchableOpacity>
+            
             {/*<Image source={SETTINGSIMAGE} style={styles.farmImageTop} />*/}
-            <Image source={CHANGEAMBIENT} style={styles.farmImageTop} />
+            <TouchableOpacity onPress={() => {
+              }}
+              style={{marginTop: 16, marginStart: 10, height: 50, width: 50}}
+            >
+              <Image source={CHANGEAMBIENT} style={styles.farmImageTop} />
+            </TouchableOpacity>
           </View>
           <View style={styles.firstView}>
             <TouchableOpacity onPress={() => {
@@ -87,10 +102,8 @@ const styles = StyleSheet.create({
     aspectRatio: 1
   },
   farmImageTop: {
-    aspectRatio: 1,
-    width: '10%',
-    marginTop: 10,
-    marginStart: 16
+    height: 50,
+    width: 50,
   },
   farmImageBottom: {
     marginEnd: 32,

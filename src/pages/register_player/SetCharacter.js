@@ -89,7 +89,12 @@ export default class SetCharacter extends Component {
                         characterSelected: 3
                       })  
                     } else {
-                      alert('Ganhe mais uma partida para desbloquar o personagem')
+                      let value = 5-this.state.jogador.numeroQuestoes
+                      if (value>1) {
+                        alert('Acerte mais ' + value + ' questõe(s) para desbloquar o personagem')  
+                      } else {
+                        alert('Acerte mais ' + value + ' questão para desbloquar o personagem')
+                      }
                     }
                   }}
                   style={[styles.characterView, {backgroundColor: this.state.characterSelected==3 ? purple : white }]}>
@@ -104,7 +109,12 @@ export default class SetCharacter extends Component {
                         characterSelected: 4
                       })
                     } else {
-                      alert('Ganhe mais duas partidas para desbloquar o personagem')
+                      let value = 10-this.state.jogador.numeroQuestoes
+                      if (value>1) {
+                        alert('Acerte mais ' + value + ' questõe(s) para desbloquar o personagem')  
+                      } else {
+                        alert('Acerte mais ' + value + ' questão para desbloquar o personagem')
+                      }
                     }
                   }}
                   style={[styles.characterView, {backgroundColor: this.state.characterSelected==4 ? purple : white }]}> 
@@ -118,7 +128,12 @@ export default class SetCharacter extends Component {
                         characterSelected: 5
                       })
                     } else {
-                      alert('Ganhe mais três partidas para desbloquar o personagem')
+                      let value = 15-this.state.jogador.numeroQuestoes
+                      if (value>1) {
+                        alert('Acerte mais ' + value + ' questõe(s) para desbloquar o personagem')  
+                      } else {
+                        alert('Acerte mais ' + value + ' questão para desbloquar o personagem')
+                      }
                     }
                   }}
                   style={[styles.characterView, {backgroundColor: this.state.characterSelected==5 ? purple : white }]}>
@@ -132,7 +147,12 @@ export default class SetCharacter extends Component {
                         characterSelected: 6
                       })
                     } else {
-                      alert('Ganhe mais quatro partidas para desbloquar o personagem')
+                      let value = 20-this.state.jogador.numeroQuestoes
+                      if (value>1) {
+                        alert('Acerte mais ' + value + ' questõe(s) para desbloquar o personagem')  
+                      } else {
+                        alert('Acerte mais ' + value + ' questão para desbloquar o personagem')
+                      }
                     }
                   }}
                   style={[styles.characterView, {backgroundColor: this.state.characterSelected==6 ? purple : white }]}>

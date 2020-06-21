@@ -18,6 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE } from '../../../images'
+import { findAllNotRemoved, getNextMid, saveThis } from '../../../realm_services/RealmService';
 
 const ModalNewPlayer = require('../../modals/ModalNewPlayer')
 
@@ -31,8 +32,8 @@ export default class SetName extends Component {
     super(props)
     const { navigation } = this.props
 
-    let jogadores = []
-
+    let jogadores = findAllNotRemoved('Usuario')
+    
     this.state = {
       jogadores: jogadores,
       jogadorSelecionado: 0,
@@ -42,17 +43,18 @@ export default class SetName extends Component {
   }
 
   addNewJogador() {
-    let jogadores = this.state.jogadores
-                                  
-    jogadores.map((it) => {
-      it.selecionado = false
+    let jogadores = []
+    let stateJogadores = this.state.jogadores
+
+    stateJogadores.map((it) => {
+      jogadores.push(it)
     })
 
     let newJogador = {}
-    newJogador.mid = this.state.jogadores.length+1
+    newJogador.mid = getNextMid('Usuario')
     newJogador.nome = this.state.name
-    newJogador.selecionado = true
-    
+    newJogador.numeroQuestoes = 0
+    this.saveUsuario(newJogador.mid)
     jogadores.push(newJogador)
 
     this.setState({
@@ -75,6 +77,14 @@ export default class SetName extends Component {
     this.props.navigation.replace('SetCharacter', {jogador: jogador})  
   }
 
+  saveUsuario(mid) {
+    let user = {}
+    user.mid = mid
+    user.nome = this.state.name
+    user.createdAt = new Date()
+    saveThis('Usuario', user)
+  }
+
   render() {
     let modalName = <Modal    
                         animationType="slide"
@@ -95,7 +105,9 @@ export default class SetName extends Component {
                             <View style={styles.viewForButton}>
                               <TouchableOpacity
                                 onPress={() => {
-                                  this.addNewJogador()
+                                  if (this.state.name.length>0) {
+                                    this.addNewJogador()
+                                  }
                                 }}
                                 style={styles.styleButton}>
                               <Text style={styles.textButton}>SALVAR</Text> 

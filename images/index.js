@@ -7,6 +7,7 @@ export const RETURNIMAGE = require('./files/icons/icon_return.png')
 export const HAPPYFACEIMAGE = require('./files/icons/icon_happy_face.png')
 export const NEUTRALFACEIMAGE = require('./files/icons/icon_neutral_face.png')
 export const CHANGEAMBIENT = require('./files/icons/icon_change_ambient.png')
+export const ICONDICA = require('./files/icons/icon_dica.png')
 
 /* CHARACTERS IMAGES */
 export const ICONCOWBOY = require('./files/icons/icon_cowboy.png');
@@ -40,3 +41,6 @@ export const MINUSICONGREY = require('./files/icons/icon_minus_grey.png');
 export const DIVISIONICONGREY = require('./files/icons/icon_division_grey.png');
 export const TIMESICONGREY = require('./files/icons/icon_times_grey.png');
 export const PLUSICONBLUE = require('./files/icons/icon_plus.png')
+export const MINUSICONBLUE = require('./files/icons/icon_minus.png')
+export const DIVISIONICONBLUE = require('./files/icons/icon_division.png')
+export const TIMESICONBLUE = require('./files/icons/icon_times.png')
