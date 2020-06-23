@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, ICONVACA, ICONPASSARO, ICONPORCO, ICONGALINHA, ICONOVELHA, ICONSAPO, ICONCACHORRO, ICONPEIXE, ICONTARTARUGA } from '../../../images'
-import { isIn } from '../../globalComponents/GlobalFunctions';
+import { isIn, FARM, getTheme, getIconByTheme, getImageByCode } from '../../globalComponents/GlobalFunctions';
 
 export default class SelectAnimals extends Component {
 
@@ -34,9 +34,17 @@ export default class SelectAnimals extends Component {
     let selecionados = [1]
 
     this.state = {
+      currentTheme: FARM,
       selecionados: selecionados,
       data: data
     }
+  }
+
+  async componentDidMount() {
+    let a = await getTheme()
+    this.setState({
+      currentTheme: a
+    })
   }
 
   setSelecionado(position) {
@@ -105,21 +113,21 @@ export default class SelectAnimals extends Component {
                     this.setSelecionado(1)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(1) ? purple : white }]}>
-                  <Image source={ICONVACA} style={styles.characterIcon} />
+                  <Image source={getImageByCode(1, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(2)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(2) ? purple : white }]}>
-                  <Image source={ICONPASSARO} style={styles.characterIcon} />
+                  <Image source={getImageByCode(2, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(3)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(3) ? purple : white }]}>
-                  <Image source={ICONPORCO} style={styles.characterIcon} />
+                  <Image source={getImageByCode(3, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
               </View>
               <View style={styles.lineCharacterView}>
@@ -128,21 +136,21 @@ export default class SelectAnimals extends Component {
                     this.setSelecionado(4)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(4) ? purple : white }]}>
-                  <Image source={ICONGALINHA} style={styles.characterIcon} />
+                  <Image source={getImageByCode(4, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(5)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(5) ? purple : white }]}>
-                  <Image source={ICONOVELHA} style={styles.characterIcon} />
+                  <Image source={getImageByCode(5, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(6)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(6) ? purple : white }]}>
-                  <Image source={ICONSAPO} style={styles.characterIcon} />
+                  <Image source={getImageByCode(6, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
               </View>
               <View style={styles.lineCharacterView}>
@@ -151,21 +159,21 @@ export default class SelectAnimals extends Component {
                     this.setSelecionado(7)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(7) ? purple : white }]}>
-                  <Image source={ICONCACHORRO} style={styles.characterIcon} />
+                  <Image source={getImageByCode(7, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(8)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(8) ? purple : white }]}>
-                  <Image source={ICONPEIXE} style={styles.characterIcon} />
+                  <Image source={getImageByCode(8, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.setSelecionado(9)
                   }}
                   style={[styles.characterView, { backgroundColor: this.isSelecionado(9) ? purple : white }]}>
-                  <Image source={ICONTARTARUGA} style={styles.characterIcon} />
+                  <Image source={getImageByCode(9, this.state.currentTheme)} style={styles.characterIcon} />
                 </TouchableOpacity>
               </View>
 
@@ -195,9 +203,7 @@ export default class SelectAnimals extends Component {
               <View />
             ) }
           </View>
-          <View style={styles.secondViewBottom}>
-            <Image source={FARMIMAGE} style={styles.farmImageBottom} />
-          </View>
+          <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
       </View>
     )
@@ -264,9 +270,6 @@ const styles = StyleSheet.create({
     marginStart: 16
   },
   farmImageBottom: {
-    marginEnd: 32,
-    marginTop: -32,
-    height: '90%',
-    aspectRatio: 1
+    height: 50
   }
 });

@@ -19,6 +19,7 @@ import {
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE } from '../../../images'
 import { findAllNotRemoved, getNextMid, saveThis } from '../../../realm_services/RealmService';
+import { FARM, ZOO, JUNGLE, getIconByTheme, getTheme } from '../../globalComponents/GlobalFunctions';
 
 const ModalNewPlayer = require('../../modals/ModalNewPlayer')
 
@@ -35,11 +36,19 @@ export default class SetName extends Component {
     let jogadores = findAllNotRemoved('Usuario')
     
     this.state = {
+      currentTheme: FARM,
       jogadores: jogadores,
       jogadorSelecionado: 0,
       name: "",
       showModalName: false
     }    
+  }
+
+  async componentDidMount() {
+    let a = await getTheme()
+    this.setState({
+      currentTheme: a
+    })
   }
 
   addNewJogador() {
@@ -209,10 +218,8 @@ export default class SetName extends Component {
 
             </TouchableOpacity>
           </View>
-            */}
-          <View style={styles.secondViewBottom}>
-            <Image source={FARMIMAGE} style={styles.farmImageBottom} />
-          </View>
+          */}
+          <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
       </View>
     )
@@ -310,9 +317,6 @@ const styles = StyleSheet.create({
     marginStart: 16
   },
   farmImageBottom: {
-    marginEnd: 32,
-    marginTop: -32,
-    height: '90%',
-    aspectRatio: 1
+    height: 50
   }
 });

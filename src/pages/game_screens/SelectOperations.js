@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY } from '../../../images'
-import { isIn } from '../../globalComponents/GlobalFunctions';
+import { isIn, FARM, getTheme, getIconByTheme } from '../../globalComponents/GlobalFunctions';
 
 export default class SelectOperations extends Component {
 
@@ -34,9 +34,17 @@ export default class SelectOperations extends Component {
     let selecionados = [1]
 
     this.state = {
+      currentTheme: FARM,
       selecionados: selecionados,
       data: data
     }
+  }
+
+  async componentDidMount() {
+    let a = await getTheme()
+    this.setState({
+      currentTheme: a
+    })
   }
 
   setSelecionado(position) {
@@ -155,9 +163,7 @@ export default class SelectOperations extends Component {
               <View />
             )}
           </View>
-          <View style={styles.secondViewBottom}>
-            <Image source={FARMIMAGE} style={styles.farmImageBottom} />
-          </View>
+          <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
       </View>
     )
@@ -224,9 +230,6 @@ const styles = StyleSheet.create({
     marginStart: 16
   },
   farmImageBottom: {
-    marginEnd: 32,
-    marginTop: -32,
-    height: '90%',
-    aspectRatio: 1
+    height: 50
   }
 });

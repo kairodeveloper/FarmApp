@@ -36,7 +36,7 @@ export default class ModalCorrect extends Component {
         <View style={styles.container}>
             <Text style={styles.titleText}>PARABÉNS!!!</Text>
             <Image source={HAPPYFACEIMAGE} style={styles.imageFace} />
-            <Text style={styles.messageText}>Acerte mais {5-this.props.numeroJogadas} questões para conseguir um novo personagem!</Text>
+            <Text style={styles.messageText}>Acerte mais {5-this.props.numeroJogadas} questões para vencer a partida!</Text>
         </View>
     )
   }

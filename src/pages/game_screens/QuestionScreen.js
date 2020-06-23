@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent, colorGreenDark } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO, ICONDICA } from '../../../images'
-import { isIn, getImageByCode } from '../../globalComponents/GlobalFunctions';
+import { isIn, getImageByCode, FARM, getTheme, getIconByTheme } from '../../globalComponents/GlobalFunctions';
 import { updateThis, getNextMid, saveThis } from '../../../realm_services/RealmService';
 
 const BUTTON_A_TAG = 'a-btn'
@@ -42,6 +42,7 @@ export default class QuestionScreen extends Component {
     let data = navigation.getParam('data', {})
 
     this.state = {
+      currentTheme: FARM,
       data: data,
       statusButtonA: false,
       statusButtonB: false,
@@ -61,8 +62,13 @@ export default class QuestionScreen extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.goToNextQuestion()
+
+    let a = await getTheme()
+    this.setState({
+      currentTheme: a
+    })
   }
 
   checkCorrection(value) {
@@ -85,7 +91,6 @@ export default class QuestionScreen extends Component {
       } else {
         showIncorrect = true
         numErradas++
-        numJogadas++
       }
     }
 
@@ -318,10 +323,10 @@ export default class QuestionScreen extends Component {
                     rows.push(
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                         </View>
                     )
@@ -329,7 +334,7 @@ export default class QuestionScreen extends Component {
                     rows.push(
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage)} style={{flex: 1, aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
                             </View>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} />
                         </View>
@@ -342,7 +347,7 @@ export default class QuestionScreen extends Component {
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{aspectRatio: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage)} style={{height: '75%', aspectRatio: 1}} />
+                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{height: '75%', aspectRatio: 1}} />
                             </View>
                         </View>
                     </View>
@@ -354,7 +359,8 @@ export default class QuestionScreen extends Component {
   }
 
   saveAndCloseWindow() {
-    let qtsCertas = this.state.numJogadas-this.state.numErradas
+    let qtsCertas = this.state.numJogadas
+    let qtdJogadas = this.state.numJogadas+this.state.numErradas
 
     let usuario = {}
     usuario.mid = this.state.data.jogador.mid
@@ -365,7 +371,7 @@ export default class QuestionScreen extends Component {
     partida.mid = getNextMid('Partida')
     partida.jogador = this.state.data.jogador.mid
     partida.imageJogador = this.state.data.characterSelected
-    partida.totalQuestoes = this.state.numJogadas
+    partida.totalQuestoes = qtdJogadas
     partida.questoesCorretas = qtsCertas
     partida.createdAt = new Date()
     
@@ -459,8 +465,6 @@ export default class QuestionScreen extends Component {
                     </View>
                     </Modal>
 
-    {/*5-this.props.numeroJogadas*/}
-
     return (
       <View style={styles.safeView}>
         {modalCorrect}
@@ -496,9 +500,6 @@ export default class QuestionScreen extends Component {
           </View>
           <View style={styles.firstViewTop}>
                 <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>Mostre seu conhecimento ^^</Text>
-                <Text>{this.state.data.characterSelected}</Text>
-                <Text>{this.state.numErradas} - {this.state.numJogadas}</Text>
-                <Text>{this.state.data.jogador.nome} - {this.state.data.jogador.mid} - {this.state.data.jogador.numeroQuestoes}</Text>
                 <View style={{
                     flex: 1,
                     width: '100%',
@@ -581,9 +582,7 @@ export default class QuestionScreen extends Component {
                   <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>{this.state.values[2]}</Text>
                 </TouchableOpacity>
           </View>
-          <View style={styles.secondViewBottom}>
-            <Image source={FARMIMAGE} style={styles.farmImageBottom} />
-          </View>
+          <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
       </View>
     )
@@ -676,10 +675,7 @@ const styles = StyleSheet.create({
     marginEnd: 16
   },
   farmImageBottom: {
-    marginEnd: 32,
-    marginTop: -32,
-    height: '90%',
-    aspectRatio: 1
+    height: 50
   },
   containerModal: {
     flex: 1,

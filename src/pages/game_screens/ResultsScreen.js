@@ -9,9 +9,9 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple } from '../../../colors';
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple, greyTextColor } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, ICONVACA, ICONPASSARO, ICONPORCO, ICONGALINHA, ICONOVELHA, ICONSAPO, ICONCACHORRO, ICONPEIXE, ICONTARTARUGA } from '../../../images'
-import { maskForDate } from '../../globalComponents/GlobalFunctions';
+import { maskForDate, getJogadorImage } from '../../globalComponents/GlobalFunctions';
 import { findAllNotRemoved } from '../../../realm_services/RealmService';
 
 export default class ResultsScreen extends Component {
@@ -24,11 +24,25 @@ export default class ResultsScreen extends Component {
     super(props)
     const { navigation } = this.props
 
-    let partidas = findAllNotRemoved('Partida')
+    let partidas = findAllNotRemoved('Partida', 'createdAt', true)
+    let jogadores = findAllNotRemoved('Usuario')
 
     this.state = {
-      partidas: partidas
+      partidas: partidas,
+      jogadores: jogadores
     }
+  }
+
+  getJogadoresByMid(mid) {
+    let retorno = ""
+
+    this.state.jogadores.map((it) => {
+      if (it.mid==mid) {
+        retorno = it.nome
+      }
+    })
+
+    return retorno
   }
 
   render() {
@@ -60,21 +74,21 @@ export default class ResultsScreen extends Component {
                 data={this.state.partidas}
                 renderItem={({ item }) => 
                   <View
-                    style={{height: 60, flexDirection: 'row', marginTop: 16, justifyContent: 'center', paddingEnd: 16, paddingStart: 16, borderRadius: 15, backgroundColor: white}}>
-                    <View style={{flex: 2, height: 60, borderWidth: 1}}>
-                        <Text>{item.imageJogador}</Text>
+                    style={{height: 76, borderBottomWidth: 1, borderColor: greyTextColor, flexDirection: 'row', marginTop: 16, justifyContent: 'center', paddingEnd: 16, paddingStart: 16, borderRadius: 15, backgroundColor: white}}>
+                    <View style={{flex: 2, height: 60, justifyContent: 'center'}}>
+                        <Image source={getJogadorImage(item.imageJogador)} style={{height: 56, width: 56}} />
                     </View>
-                    <View style={{flex: 6, height: 60, borderWidth: 1, flexDirection: 'column'}}>
-                        <View style={{height: 30, borderWidth: 1, flexDirection: 'row'}}>
-                            <View style={{flex: 6, borderWidth: 1}}>
-                                <Text>{item.jogador}</Text>
+                    <View style={{flex: 6, height: 60, flexDirection: 'column'}}>
+                        <View style={{height: 30, flexDirection: 'row'}}>
+                            <View style={{flex: 6, justifyContent: 'center'}}>
+                                <Text style={{textTransform: 'capitalize', fontSize: 16, fontWeight: 'bold'}}>{this.getJogadoresByMid(item.jogador)}</Text>
                             </View>    
-                            <View style={{flex: 4, borderWidth: 1}}>
-                                <Text>{maskForDate(item.createdAt)}</Text>
+                            <View style={{flex: 4, justifyContent: 'center', alignItems: 'flex-end'}}>
+                                <Text style={{fontSize: 16, fontWeight: 'bold', color: greyTextColor}}>{maskForDate(item.createdAt)}</Text>
                             </View>    
                         </View>
-                        <View style={{height: 30, borderWidth: 1}}>
-                            <Text>{item.questoesCorretas} de {item.totalQuestoes} questões acertadas</Text>
+                        <View style={{height: 30}}>
+                            <Text style={{fontSize: 16, color: greyTextColor}}>{item.questoesCorretas} de {item.totalQuestoes} questões acertadas</Text>
                         </View>
                     </View>
                   </View>

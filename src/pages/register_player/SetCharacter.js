@@ -18,6 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED } from '../../../images'
+import { getTheme, FARM, getIconByTheme } from '../../globalComponents/GlobalFunctions';
 
 export default class SetCharacter extends Component {
 
@@ -30,13 +31,36 @@ export default class SetCharacter extends Component {
     const { navigation } = this.props
 
     let jogador = navigation.getParam('jogador', {})     
-    let liberados = [1, 2]
+    let liberados = this.getUnlockedCharacters(jogador.numeroQuestoes)
 
     this.state = {
+      currentTheme: FARM,
       jogador: jogador,
       characterSelected: 1,
       maiorLiberado: liberados[liberados.length-1]
     }
+  }
+
+  async componentDidMount() {
+    let a = await getTheme()
+    this.setState({
+      currentTheme: a
+    })
+  }
+
+  getUnlockedCharacters(questoes) {
+    let retorno = [1, 2]
+    if (questoes>=5) {
+      retorno.push(3)
+    } else if (questoes>=10) {
+      retorno.push(4)
+    } else if (questoes>=15) {
+      retorno.push(5)
+    } else if (questoes>=20) {
+      retorno.push(6)
+    }
+
+    return retorno
   }
 
   render() {
@@ -104,7 +128,7 @@ export default class SetCharacter extends Component {
               <View style={styles.lineCharacterView}>
                 <TouchableOpacity 
                   onPress={() => {
-                    if (this.state.maiorLiberado >= 3) {
+                    if (this.state.maiorLiberado >= 4) {
                       this.setState({
                         characterSelected: 4
                       })
@@ -123,7 +147,7 @@ export default class SetCharacter extends Component {
 
                 <TouchableOpacity 
                   onPress={() => {
-                    if (this.state.maiorLiberado >= 3) {
+                    if (this.state.maiorLiberado >= 5) {
                         this.setState({
                         characterSelected: 5
                       })
@@ -142,7 +166,7 @@ export default class SetCharacter extends Component {
                 
                 <TouchableOpacity 
                   onPress={() => {
-                    if (this.state.maiorLiberado >= 3) {
+                    if (this.state.maiorLiberado >= 6) {
                       this.setState({
                         characterSelected: 6
                       })
@@ -185,9 +209,8 @@ export default class SetCharacter extends Component {
               <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>SEGUINTE</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.secondViewBottom}>
-            <Image source={FARMIMAGE} style={styles.farmImageBottom} />
-          </View>
+          <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
+
         </View>
       </View>
     )
@@ -254,9 +277,6 @@ const styles = StyleSheet.create({
     marginStart: 16
   },
   farmImageBottom: {
-    marginEnd: 32,
-    marginTop: -32,
-    height: '90%',
-    aspectRatio: 1
+    height: 50
   }
 });
