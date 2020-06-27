@@ -1,6 +1,7 @@
 import { createAppContainer } from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack';
 import Main from './pages/Main'
+import SplashScreen1 from './pages/SplashScreen1'
 import { white, colorPrimary } from '../colors';
 import SetName from './pages/register_player/SetName';
 import SetCharacter from './pages/register_player/SetCharacter';
@@ -24,6 +25,10 @@ const navigationOptions = {
 
 
 const RootStack = createStackNavigator({
+    Splash1: {
+        screen: SplashScreen1,
+        navigationOptions: navigationOptions
+    },
     Main: {
         screen: Main,
         navigationOptions: navigationOptions
@@ -53,7 +58,7 @@ const RootStack = createStackNavigator({
         navigationOptions: navigationOptions
     }
 },{
-    initialRouteName: 'Main'
+    initialRouteName: 'Splash1'
 });
 
 const AppContainer = createAppContainer(RootStack);

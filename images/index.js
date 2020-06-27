@@ -1,4 +1,6 @@
 /* GENERAL IMAGES */
+export const LOGOUFPI = require('./files/ufpi.png')
+export const LOGOPROFNIT = require('./files/profnit.png')
 export const STARTIMAGE = require('./files/icons/icon_start.png')
 export const FARMIMAGE = require('./files/icon_farm.png')
 export const PODIOIMAGE = require('./files/icons/icon_podio.png')

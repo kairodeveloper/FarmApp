@@ -210,7 +210,7 @@ export default class SetCharacter extends Component {
             </TouchableOpacity>
           </View>
           <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
-
+//
         </View>
       </View>
     )
