@@ -74,17 +74,17 @@ export default class QuestionScreen extends Component {
   checkCorrection(value) {
     let numJogadas = this.state.numJogadas
     let numErradas = this.state.numErradas
-    
+
     let showCorrect = false
     let showIncorrect = false
     let showVictory = false
 
     let correct = false
-    if (value==this.state.result) {
+    if (value == this.state.result) {
       correct = true
-    } 
+    }
 
-    if (value>0) {
+    if (value > 0) {
       if (correct) {
         showCorrect = true
         numJogadas++
@@ -94,7 +94,7 @@ export default class QuestionScreen extends Component {
       }
     }
 
-    if (numJogadas==5) {
+    if (numJogadas == 5) {
       showCorrect = false
       showVictory = true
     }
@@ -110,10 +110,10 @@ export default class QuestionScreen extends Component {
 
   goToNextQuestion() {
     let showCorrect = false
-    let showIncorrect = false 
+    let showIncorrect = false
     let showVictory = false
 
-    if (this.state.numJogadas==5) {
+    if (this.state.numJogadas == 5) {
       this.saveAndCloseWindow()
     }
 
@@ -144,7 +144,7 @@ export default class QuestionScreen extends Component {
     let result = this.getResult(numberX, numberY, symbol)
     let values = this.getShuffle([result.result, result.option1, result.option2])
 
-    return({
+    return ({
       numberX: numberX,
       numberY: numberY,
       operation: symbol,
@@ -156,8 +156,8 @@ export default class QuestionScreen extends Component {
 
   getOperationValue() {
     let values = [
-      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 
-      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 
+      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
+      1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
       1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
       1, 2, 3, 4
     ]
@@ -174,17 +174,17 @@ export default class QuestionScreen extends Component {
 
   getShuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-  
+
     while (0 !== currentIndex) {
-  
+
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-  
+
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-  
+
     return array;
   }
 
@@ -192,21 +192,21 @@ export default class QuestionScreen extends Component {
     let result = 0
     let retorno = {
       result: 0,
-      option1: 0, 
+      option1: 0,
       option2: 0
     }
 
-    if (operation==PLUSICONGREY) {
-      result = valueX+valueY
-    
-    } else if (operation==MINUSICONGREY) {
-      result = valueX-valueY
-    
-    } else if (operation==DIVISIONICONGREY) {
-      result = (valueX/valueY).toFixed(1)
-    
-    } else if (operation==TIMESICONGREY) {
-      result = valueX*valueY
+    if (operation == PLUSICONGREY) {
+      result = valueX + valueY
+
+    } else if (operation == MINUSICONGREY) {
+      result = valueX - valueY
+
+    } else if (operation == DIVISIONICONGREY) {
+      result = (valueX / valueY).toFixed(1)
+
+    } else if (operation == TIMESICONGREY) {
+      result = valueX * valueY
     }
 
     result = parseInt(result, 10)
@@ -218,25 +218,25 @@ export default class QuestionScreen extends Component {
     let limitX2 = 0
     let limitY1 = 0
     let limitY2 = 0
-    
-    if (result<=3) {
-      limitX1 = result+1
-      limitX2 = result+5
-      limitY1 = result+5
-      limitY2 = result+10
 
-      option1 = this.getRandomInt(limitX1,limitX2)
+    if (result <= 3) {
+      limitX1 = result + 1
+      limitX2 = result + 5
+      limitY1 = result + 5
+      limitY2 = result + 10
+
+      option1 = this.getRandomInt(limitX1, limitX2)
       option2 = this.getRandomInt(limitY1, limitY2)
     } else {
-      limitX1 = result+1
-      limitX2 = result+5
-      limitY1 = result-3
-      limitY2 = result-1
-      
-      option1 = this.getRandomInt(limitX1,limitX2)
+      limitX1 = result + 1
+      limitX2 = result + 5
+      limitY1 = result - 3
+      limitY2 = result - 1
+
+      option1 = this.getRandomInt(limitX1, limitX2)
       option2 = this.getRandomInt(limitY1, limitY2)
-    }    
-    
+    }
+
     retorno.result = result
     retorno.option1 = option1
     retorno.option2 = option2
@@ -257,19 +257,19 @@ export default class QuestionScreen extends Component {
 
     let x = 0
     let y = 0
-    if (operation==MINUSICONGREY) {
+    if (operation == MINUSICONGREY) {
       //minus
       do {
         x = Math.floor(Math.random() * (max - min)) + min;
         y = Math.floor(Math.random() * (max - min)) + min;
-      } while (x-y<=0 || x==y);
-    
-    } else if (operation==DIVISIONICONGREY) {
+      } while (x - y <= 0 || x == y);
+
+    } else if (operation == DIVISIONICONGREY) {
       //divide
       do {
         x = Math.floor(Math.random() * (max - min)) + min;
         y = Math.floor(Math.random() * (max - min)) + min;
-      } while (x%y!=0 || x/y<1 || x==y);
+      } while (x % y != 0 || x / y < 1 || x == y);
     } else {
       //plus AND times
 
@@ -284,87 +284,87 @@ export default class QuestionScreen extends Component {
   }
 
   getOperationSymbol(number) {
-      let symbols = [PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
-                      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY
-                    ]
-      return symbols[number]
+    let symbols = [PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY,
+      PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY
+    ]
+    return symbols[number]
   }
 
   getAnimalForQuestion() {
     let valueY = this.state.data.animals.length
     let value = this.getRandomInt(0, valueY)
     let valueImage = this.state.data.animals[value]
-    
+
     return valueImage
   }
 
   getColumnsAndLines(number) {
-        let rows = []
-        let a = "\n"
+    let rows = []
+    let a = "\n"
 
-        if (number>5) {
-            let anotherNumber = number-5
-            for (let index = 0; index < 5; index++) {
-                if (index < anotherNumber) {
-                    rows.push(
-                        <View style={{flex: 1, flexDirection: 'row'}}>
-                            <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
-                            </View>
-                            <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
-                            </View>
-                        </View>
-                    )
-                } else {
-                    rows.push(
-                        <View style={{flex: 1, flexDirection: 'row'}}>
-                            <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{flex: 1, aspectRatio: 1}} />
-                            </View>
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} />
-                        </View>
-                    )
-                }
-            }
+    if (number > 5) {
+      let anotherNumber = number - 5
+      for (let index = 0; index < 5; index++) {
+        if (index < anotherNumber) {
+          rows.push(
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{ flex: 1, aspectRatio: 1 }} />
+              </View>
+              <View style={{ flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{ flex: 1, aspectRatio: 1 }} />
+              </View>
+            </View>
+          )
         } else {
-            for (let index = 0; index < number; index++) {
-                rows.push(
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{aspectRatio: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{height: '75%', aspectRatio: 1}} />
-                            </View>
-                        </View>
-                    </View>
-                )
-            }
+          rows.push(
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{ flex: 1, aspectRatio: 1 }} />
+              </View>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />
+            </View>
+          )
         }
+      }
+    } else {
+      for (let index = 0; index < number; index++) {
+        rows.push(
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 1, padding: 6, justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ aspectRatio: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                <Image source={getImageByCode(this.state.valueImage, this.state.currentTheme)} style={{ height: '75%', aspectRatio: 1 }} />
+              </View>
+            </View>
+          </View>
+        )
+      }
+    }
 
-        return rows
+    return rows
   }
 
   saveAndCloseWindow() {
     let qtsCertas = this.state.numJogadas
-    let qtdJogadas = this.state.numJogadas+this.state.numErradas
+    let qtdJogadas = this.state.numJogadas + this.state.numErradas
 
     let usuario = {}
     usuario.mid = this.state.data.jogador.mid
-    usuario.numeroQuestoes = this.state.data.jogador.numeroQuestoes+qtsCertas
+    usuario.numeroQuestoes = this.state.data.jogador.numeroQuestoes + qtsCertas
     updateThis('Usuario', usuario, ['numeroQuestoes'])
 
     let partida = {}
@@ -374,96 +374,96 @@ export default class QuestionScreen extends Component {
     partida.totalQuestoes = qtdJogadas
     partida.questoesCorretas = qtsCertas
     partida.createdAt = new Date()
-    
+
     saveThis('Partida', partida)
 
     this.props.navigation.goBack()
   }
 
   render() {
-    let modalCorrect = <Modal    
-                        animationType="slide"
-                        visible={this.state.answerCorrect}
-                        transparent>
-                        <View style={styles.containerModal}>
-                          <View style={styles.viewContentModal}>
-                            <ModalCorrect numeroJogadas={this.state.numJogadas} />
-                            <View style={styles.viewForButton}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  this.goToNextQuestion()
-                                }}
-                                style={styles.styleButton}>
-                               <Text style={styles.textButton}>CONTINUAR</Text> 
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      </Modal>
+    let modalCorrect = <Modal
+      animationType="slide"
+      visible={this.state.answerCorrect}
+      transparent>
+      <View style={styles.containerModal}>
+        <View style={styles.viewContentModal}>
+          <ModalCorrect numeroJogadas={this.state.numJogadas} />
+          <View style={styles.viewForButton}>
+            <TouchableOpacity
+              onPress={() => {
+                this.goToNextQuestion()
+              }}
+              style={styles.styleButton}>
+              <Text style={styles.textButton}>CONTINUAR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
 
-    let modalIncorrect = <Modal    
-                        animationType="slide"
-                        visible={this.state.answerIncorrect}
-                        transparent>
-                        <View style={styles.containerModal}>
-                          <View style={styles.viewContentModal}>
-                            <ModalIncorrect numeroJogadas={this.state.numJogadas} />
-                            <View style={styles.viewForButton}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  this.goToNextQuestion()
-                                }}
-                                style={styles.styleButton}>
-                               <Text style={styles.textButton}>CONTINUAR</Text> 
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      </Modal>
+    let modalIncorrect = <Modal
+      animationType="slide"
+      visible={this.state.answerIncorrect}
+      transparent>
+      <View style={styles.containerModal}>
+        <View style={styles.viewContentModal}>
+          <ModalIncorrect numeroJogadas={this.state.numJogadas} />
+          <View style={styles.viewForButton}>
+            <TouchableOpacity
+              onPress={() => {
+                this.goToNextQuestion()
+              }}
+              style={styles.styleButton}>
+              <Text style={styles.textButton}>CONTINUAR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
 
-    let modalVictory= <Modal    
-                        animationType="slide"
-                        visible={this.state.answerLast}
-                        transparent>
-                        <View style={styles.containerModal}>
-                          <View style={styles.viewContentModal}>
-                            <ModalVictory numeroJogadas={this.state.numJogadas} />
-                            <View style={styles.viewForButton}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  this.goToNextQuestion()
-                                }}
-                                style={styles.styleButton}>
-                              <Text style={styles.textButton}>TERMINAR</Text> 
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                        </Modal>
+    let modalVictory = <Modal
+      animationType="slide"
+      visible={this.state.answerLast}
+      transparent>
+      <View style={styles.containerModal}>
+        <View style={styles.viewContentModal}>
+          <ModalVictory numeroJogadas={this.state.numJogadas} />
+          <View style={styles.viewForButton}>
+            <TouchableOpacity
+              onPress={() => {
+                this.goToNextQuestion()
+              }}
+              style={styles.styleButton}>
+              <Text style={styles.textButton}>TERMINAR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
 
-    let modalTip = <Modal    
-                    animationType="slide"
-                    visible={this.state.modalTip}
-                    transparent>
-                    <View style={styles.containerModal}>
-                      <View style={styles.viewContentModalLittle}>
-                        <View style={{height: 24, flexDirection: 'row-reverse'}}>
-                          <TouchableOpacity onPress={() => {
-                            this.setState({
-                              modalTip: false
-                            })
-                          }}>
-                            <Image source={TIMESICONGREY} style={{height: 24, width: 24}} />
-                          </TouchableOpacity>
-                        </View>
-                        <ModalSimples valueX={this.state.numberX}
-                                    operation={this.state.operation}
-                                    valueY={this.state.numberY} />
+    let modalTip = <Modal
+      animationType="slide"
+      visible={this.state.modalTip}
+      transparent>
+      <View style={styles.containerModal}>
+        <View style={styles.viewContentModalLittle}>
+          <View style={{ height: 24, flexDirection: 'row-reverse' }}>
+            <TouchableOpacity onPress={() => {
+              this.setState({
+                modalTip: false
+              })
+            }}>
+              <Image source={TIMESICONGREY} style={{ height: 24, width: 24 }} />
+            </TouchableOpacity>
+          </View>
+          <ModalSimples valueX={this.state.numberX}
+            operation={this.state.operation}
+            valueY={this.state.numberY} />
 
-                        <View style={{height: 24, flexDirection: 'row-reverse'}}/>
-                      </View>
-                    </View>
-                    </Modal>
+          <View style={{ height: 24, flexDirection: 'row-reverse' }} />
+        </View>
+      </View>
+    </Modal>
 
     return (
       <View style={styles.safeView}>
@@ -474,7 +474,7 @@ export default class QuestionScreen extends Component {
         <StatusBar barStyle="light-content" backgroundColor={colorPrimaryDark} />
         <View style={styles.container}>
           <View style={styles.secondViewTop}>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <TouchableOpacity onPress={() => {
                 Alert.alert(
                   'A partida está em andamento',
@@ -488,7 +488,7 @@ export default class QuestionScreen extends Component {
               </TouchableOpacity>
             </View>
 
-            <View style={{flex: 1, flexDirection: 'row-reverse'}}>
+            <View style={{ flex: 1, flexDirection: 'row-reverse' }}>
               <TouchableOpacity onPress={() => {
                 this.setState({
                   modalTip: true
@@ -499,88 +499,90 @@ export default class QuestionScreen extends Component {
             </View>
           </View>
           <View style={styles.firstViewTop}>
-                <Text style={{fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark}}>Mostre seu conhecimento ^^</Text>
-                <View style={{
-                    flex: 1,
-                    width: '100%',
-                    backgroundColor: white,
-                    borderRadius: 20,
-                    marginTop: 16,
-                    padding: 16
-                }}>
-                  {/*https://www.youtube.com/watch?v=LxpKSJIbraA */}
-                    <View style={styles.lineCharacterView}>
-                        <View style={{flex: 2, flexDirection: 'column'}}>
-                            {this.getColumnsAndLines(this.state.numberX)}
-                        </View>
-                        <View style={{flex: 1, padding: 16}}>
-                            <TouchableOpacity style={styles.characterView}> 
-                                <Image source={this.state.operation} style={styles.characterIcon} />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex: 2, flexDirection: 'column'}}>
-                            {this.getColumnsAndLines(this.state.numberY)}
-                        </View>
-                    </View>
-
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Mostre seu conhecimento ^^</Text>
+            {/*<Text>Jogadas: {this.state.numJogadas}</Text>
+            <Text>Erradas: {this.state.numErradas}</Text>*/}
+            <View style={{
+              flex: 1,
+              width: '100%',
+              backgroundColor: white,
+              borderRadius: 20,
+              marginTop: 16,
+              padding: 16
+            }}>
+              {/*https://www.youtube.com/watch?v=LxpKSJIbraA */}
+              <View style={styles.lineCharacterView}>
+                <View style={{ flex: 2, flexDirection: 'column' }}>
+                  {this.getColumnsAndLines(this.state.numberX)}
                 </View>
+                <View style={{ flex: 1, padding: 16 }}>
+                  <TouchableOpacity style={styles.characterView}>
+                    <Image source={this.state.operation} style={styles.characterIcon} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 2, flexDirection: 'column' }}>
+                  {this.getColumnsAndLines(this.state.numberY)}
+                </View>
+              </View>
+
+            </View>
           </View>
           <View style={styles.firstViewBottom}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.checkCorrection(this.state.values[0])
-                  }}
-                  style={{
-                    height: 50,
-                    flex: 1,
-                    backgroundColor: white,
-                    borderRadius: 15,
-                    marginBottom: 56,
-                    borderWidth: 1,
-                    marginEnd: 3,
-                    borderColor: colorPrimaryDark,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>{this.state.values[0]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.checkCorrection(this.state.values[1])
-                  }}
-                  style={{
-                      height: 50,
-                      flex: 1,
-                      marginStart: 3,
-                      marginEnd: 3,
-                      backgroundColor: white,
-                      borderRadius: 15,
-                      marginBottom: 56,
-                      borderWidth: 1,
-                      borderColor: colorPrimaryDark,
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                  }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>{this.state.values[1]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.checkCorrection(this.state.values[2])
-                  }}
-                  style={{
-                    height: 50,
-                    flex: 1,
-                    marginStart: 3,
-                    backgroundColor: white,
-                    borderRadius: 15,
-                    marginBottom: 56,
-                    borderWidth: 1,
-                    borderColor: colorPrimaryDark,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}}>{this.state.values[2]}</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.checkCorrection(this.state.values[0])
+              }}
+              style={{
+                height: 50,
+                flex: 1,
+                backgroundColor: white,
+                borderRadius: 15,
+                marginBottom: 56,
+                borderWidth: 1,
+                marginEnd: 3,
+                borderColor: colorPrimaryDark,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>{this.state.values[0]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.checkCorrection(this.state.values[1])
+              }}
+              style={{
+                height: 50,
+                flex: 1,
+                marginStart: 3,
+                marginEnd: 3,
+                backgroundColor: white,
+                borderRadius: 15,
+                marginBottom: 56,
+                borderWidth: 1,
+                borderColor: colorPrimaryDark,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>{this.state.values[1]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.checkCorrection(this.state.values[2])
+              }}
+              style={{
+                height: 50,
+                flex: 1,
+                marginStart: 3,
+                backgroundColor: white,
+                borderRadius: 15,
+                marginBottom: 56,
+                borderWidth: 1,
+                borderColor: colorPrimaryDark,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }}>{this.state.values[2]}</Text>
+            </TouchableOpacity>
           </View>
           <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
@@ -647,15 +649,15 @@ const styles = StyleSheet.create({
     width: 100
   },
   lineCharacterView: {
-      flex: 1, 
-      flexDirection: 'row'
-    },
+    flex: 1,
+    flexDirection: 'row'
+  },
   characterView: {
-    flex: 1, 
+    flex: 1,
     margin: 6,
-    borderRadius: 15, 
+    borderRadius: 15,
     padding: 16,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center'
   },
   characterIcon: {
@@ -698,10 +700,10 @@ const styles = StyleSheet.create({
     padding: 16
   },
   viewForButton: {
-    flex: 1, 
-    padding: 10, 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
+    flex: 1,
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   styleButton: {
@@ -713,8 +715,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   textButton: {
-    fontSize: 18, 
-    fontWeight: 'bold', 
+    fontSize: 18,
+    fontWeight: 'bold',
     color: white
   }
 });

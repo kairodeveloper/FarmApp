@@ -3,6 +3,7 @@ export const black = "#000"
 export const white = "#FFF"
 export const red = "#993300"
 export const purple = "#869CC8"
+export const yellow = "#fff8c9"
 
 // PERSONAL COLORS
 export const colorPrimary = "#80C8E5"

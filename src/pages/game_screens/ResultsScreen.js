@@ -33,6 +33,12 @@ export default class ResultsScreen extends Component {
     }
   }
 
+  countDecimals(value) {
+    let result = value.toString().split(".")[1]
+
+    return parseInt(result, 10)==0
+  }
+
   getJogadoresByMid(mid) {
     let retorno = ""
 
@@ -43,6 +49,17 @@ export default class ResultsScreen extends Component {
     })
 
     return retorno
+  }
+
+  getPercentual(questoesCorretas, totalQuestoes) {
+    let value = (questoesCorretas*(100/totalQuestoes)).toFixed(1)
+    let isEqualZero = this.countDecimals(value)
+
+    if (isEqualZero) {
+      return(parseInt(value, 10))
+    } else {
+      return(value)
+    }    
   }
 
   render() {
@@ -74,12 +91,12 @@ export default class ResultsScreen extends Component {
                 data={this.state.partidas}
                 renderItem={({ item }) => 
                   <View
-                    style={{height: 76, borderBottomWidth: 1, borderColor: greyTextColor, flexDirection: 'row', marginTop: 16, justifyContent: 'center', paddingEnd: 16, paddingStart: 16, borderRadius: 15, backgroundColor: white}}>
-                    <View style={{flex: 2, height: 60, justifyContent: 'center'}}>
+                    style={{minHeight: 60, borderBottomWidth: 1, borderColor: greyTextColor, flexDirection: 'row', marginTop: 16, justifyContent: 'center', paddingEnd: 16, paddingStart: 16, borderRadius: 15, backgroundColor: white}}>
+                    <View style={{flex: 2, minHeight: 60, justifyContent: 'center'}}>
                         <Image source={getJogadorImage(item.imageJogador)} style={{height: 56, width: 56}} />
                     </View>
-                    <View style={{flex: 6, height: 60, flexDirection: 'column'}}>
-                        <View style={{height: 30, flexDirection: 'row'}}>
+                    <View style={{flex: 6, paddingBottom: 16, minHeight: 60, flexDirection: 'column'}}>
+                        <View style={{minHeight: 30, flexDirection: 'row'}}>
                             <View style={{flex: 6, justifyContent: 'center'}}>
                                 <Text style={{textTransform: 'capitalize', fontSize: 16, fontWeight: 'bold'}}>{this.getJogadoresByMid(item.jogador)}</Text>
                             </View>    
@@ -87,8 +104,9 @@ export default class ResultsScreen extends Component {
                                 <Text style={{fontSize: 16, fontWeight: 'bold', color: greyTextColor}}>{maskForDate(item.createdAt)}</Text>
                             </View>    
                         </View>
-                        <View style={{height: 30}}>
+                        <View style={{minHeight: 36}}>
                             <Text style={{fontSize: 16, color: greyTextColor}}>{item.questoesCorretas} de {item.totalQuestoes} questões acertadas</Text>
+                            <Text style={{fontSize: 16, marginTop: 6, color: greyTextColor}}>{this.getPercentual(item.questoesCorretas, item.totalQuestoes)}% de aproveitamento</Text>
                         </View>
                     </View>
                   </View>

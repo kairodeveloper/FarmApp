@@ -16,8 +16,8 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red } from '../../../colors';
-import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE } from '../../../images'
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red, yellow } from '../../../colors';
+import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE, FUNDOADDPLAYERIMAGE } from '../../../images'
 import { findAllNotRemoved, getNextMid, saveThis } from '../../../realm_services/RealmService';
 import { FARM, ZOO, JUNGLE, getIconByTheme, getTheme } from '../../globalComponents/GlobalFunctions';
 
@@ -34,14 +34,14 @@ export default class SetName extends Component {
     const { navigation } = this.props
 
     let jogadores = findAllNotRemoved('Usuario')
-    
+
     this.state = {
       currentTheme: FARM,
       jogadores: jogadores,
       jogadorSelecionado: 0,
       name: "",
       showModalName: false
-    }    
+    }
   }
 
   async componentDidMount() {
@@ -74,16 +74,26 @@ export default class SetName extends Component {
   }
 
   selectJogador(mid) {
-    let jogadores = this.state.jogadores
+    let jogadorSelecionado = 0
+
+    jogadorSelecionado = mid
+
+    this.setState({
+      jogadorSelecionado: jogadorSelecionado
+    })
+    //this.props.navigation.replace('SetCharacter', { jogador: jogador })
+  }
+
+  getJogadorSelecionado() {
     let jogador = {}
 
-    jogadores.map((it) => {
-      if (it.mid==mid) {
+    this.state.jogadores.map((it) => {
+      if (it.mid == this.state.jogadorSelecionado) {
         jogador = it
       }
     })
 
-    this.props.navigation.replace('SetCharacter', {jogador: jogador})  
+    return jogador
   }
 
   saveUsuario(mid) {
@@ -95,45 +105,45 @@ export default class SetName extends Component {
   }
 
   render() {
-    let modalName = <Modal    
-                        animationType="slide"
-                        visible={this.state.showModalName}
-                        transparent>
-                        <View style={styles.containerModal}>
-                          <View style={styles.viewContentModal}>
-                            <ModalNewPlayer numeroJogadas={this.state.numJogadas} />
-                            <View style={styles.viewForTextInput}>
-                              <TextInput
-                                fontSize={18}
-                                textColor={colorPrimaryDark}
-                                baseColor={colorPrimaryDark}
-                                placeholder={'Digite o nome...'}
-                                onChangeText={(name) => this.setState({ name })}
-                              />
-                            </View>
-                            <View style={styles.viewForButton}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (this.state.name.length>0) {
-                                    this.addNewJogador()
-                                  }
-                                }}
-                                style={styles.styleButton}>
-                              <Text style={styles.textButton}>SALVAR</Text> 
-                              </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity 
-                              style={{alignItems: 'center', justifyContent: 'center', height: 25}}
-                              onPress={() => {
-                                this.setState({
-                                  showModalName: false
-                                })
-                              }}>
-                              <Text style={{color: red, fontWeight: 'bold'}}>fechar</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </Modal>
+    let modalName = <Modal
+      animationType="slide"
+      visible={this.state.showModalName}
+      transparent>
+      <View style={styles.containerModal}>
+        <View style={styles.viewContentModal}>
+          <ModalNewPlayer numeroJogadas={this.state.numJogadas} />
+          <View style={styles.viewForTextInput}>
+            <TextInput
+              fontSize={18}
+              textColor={colorPrimaryDark}
+              baseColor={colorPrimaryDark}
+              placeholder={'Digite o nome...'}
+              onChangeText={(name) => this.setState({ name })}
+            />
+          </View>
+          <View style={styles.viewForButton}>
+            <TouchableOpacity
+              onPress={() => {
+                if (this.state.name.length > 0) {
+                  this.addNewJogador()
+                }
+              }}
+              style={styles.styleButton}>
+              <Text style={styles.textButton}>SALVAR</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={{ alignItems: 'center', justifyContent: 'center', height: 25 }}
+            onPress={() => {
+              this.setState({
+                showModalName: false
+              })
+            }}>
+            <Text style={{ color: red, fontWeight: 'bold' }}>fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
     return (
       <View style={styles.safeView}>
         {modalName}
@@ -148,60 +158,58 @@ export default class SetName extends Component {
           </View>
           <View style={styles.viewMiddle}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Escolha um jogador</Text>
-            { this.state.jogadores.length==0 ? (
-              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{fontSize: 18, color: colorPrimaryDark}}>Não há nenhum jogador registrado...</Text>
+            {this.state.jogadores.length == 0 ? (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 18, color: colorPrimaryDark }}>Não há nenhum jogador registrado...</Text>
               </View>
             ) : (
-              <FlatList
-                style={{flex: 1}}
-                data={this.state.jogadores}
-                renderItem={({ item }) => 
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.selectJogador(item.mid)
-                    }}
-                    style={
-                      item.selecionado ? (
-                        {height: 60, borderWidth: 4, borderColor: colorPrimaryDark, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white} 
-                      ) : (
-                        {height: 50, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white}  
-                      )}>
-                    <Text style={ item.selecionado ? ( 
-                      {fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}
-                    ) : (
-                      {fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark}                    
-                    )}>{item.nome}</Text>
-                  </TouchableOpacity>
-              }/>
-          ) }
-          </View>
-          
-          <View style={styles.firstViewTop}>
-            <View style={{
-              height: 50,
-              width: '80%',
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-              borderRadius: 15,
-              paddingStart: 16
-              }}>
-              <Text style={{ marginEnd: 16, fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Crie um jogador</Text>
+                <View style={{ flex: 1 }}>
+                  <FlatList
+                    style={{ flex: 1 }}
+                    data={this.state.jogadores}
+                    renderItem={({ item }) =>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.selectJogador(item.mid)
+                        }}
+                        style={
+                          item.mid == this.state.jogadorSelecionado ? (
+                            { height: 60, borderWidth: 4, borderColor: colorPrimaryDark, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: yellow }
+                          ) : (
+                              { height: 50, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white }
+                            )}>
+                        <Text style={item.selecionado ? (
+                          { fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }
+                        ) : (
+                            { fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }
+                          )}>{item.nome}</Text>
+                      </TouchableOpacity>
+                    } />
+                </View>
+              )}
+            <View style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                onPress={() => {
+                  this.setState({
+                    showModalName: true
+                  })
+                }}>
+                <Text style={{ marginEnd: 16, fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Crie um jogador</Text>
+                <Image source={PLUSICONBLUE} style={{ height: 16, width: 16 }} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity 
-              style={{height: 50, width: '20%', justifyContent: 'center', alignItems: 'center', borderColor: colorPrimaryDark, borderWidth: 3, borderRadius: 15}}
-              onPress={() => {
-                this.setState({
-                  showModalName: true
-                })
-              }}>
-              <Image source={PLUSICONBLUE} style={{height: 32, width: 32}} />
-            </TouchableOpacity>
+
           </View>
-          
-          {/*<View style={styles.firstViewBottom}>
+
+          <View style={styles.firstViewBottom}>
             <TouchableOpacity onPress={() => {
-              //this.props.navigation.navigate('SetCharactr')
+              if (this.state.jogadorSelecionado == 0) {
+                alert('Selecione um jogador antes...')
+              } else {
+                let jogador = this.getJogadorSelecionado()
+                this.props.navigation.replace('SetCharacter', { jogador: jogador })
+              }
             }}
               style={{
                 height: 50,
@@ -218,7 +226,6 @@ export default class SetName extends Component {
 
             </TouchableOpacity>
           </View>
-          */}
           <ImageBackground source={getIconByTheme(this.state.currentTheme)} style={styles.farmImageBottom} />
         </View>
       </View>
@@ -263,16 +270,16 @@ const styles = StyleSheet.create({
   },
   viewForTextInput: {
     flex: 2,
-    padding: 10, 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center'
-  },        
+  },
   viewForButton: {
-    flex: 1, 
-    padding: 10, 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
+    flex: 1,
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center'
   },
   styleButton: {
@@ -284,8 +291,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   textButton: {
-    fontSize: 18, 
-    fontWeight: 'bold', 
+    fontSize: 18,
+    fontWeight: 'bold',
     color: white
   },
   firstViewBottom: {
