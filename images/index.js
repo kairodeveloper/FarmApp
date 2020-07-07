@@ -16,6 +16,7 @@ export const JUNGLEIMAGE = require('./files/icon_jungle.png')
 export const FRUITIMAGE = require('./files/icon_fruits.png')
 export const TRANSPORTIMAGE = require('./files/icon_transport.png')
 export const RANDOMIMAGE = require('./files/icon_random.png')
+export const MOUNTAIN = require('./files/icons/icon_mountain.png')
 export const NOSOUND = require('./files/icons/icon_no_sound.png')
 export const WITHSOUND = require('./files/icons/icon_sound.png')
 

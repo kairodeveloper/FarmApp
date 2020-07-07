@@ -13,10 +13,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   Platform,
-  StatusBar
+  StatusBar,
+  Animated
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, colorGreenDark, white } from '../../colors';
-import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT, ZOOIMAGE, JUNGLEIMAGE, THEMEFARM, THEMEZOO, THEMEJUNGLE, WITHSOUND, NOSOUND } from '../../images'
+import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT, ZOOIMAGE, JUNGLEIMAGE, THEMEFARM, THEMEZOO, THEMEJUNGLE, WITHSOUND, NOSOUND, MOUNTAIN } from '../../images'
 import { removeAll } from '../../realm_services/RealmService'
 import AsyncStorage from '@react-native-community/async-storage'
 import { FARM, getSound, getIconByTheme, getTheme, returnScenarios } from '../globalComponents/GlobalFunctions';
@@ -33,10 +34,12 @@ export default class Main extends Component {
 
     let cenarios = returnScenarios()
     this.state = {
+      showScenarios: false,
       setSound: true,
       currentTheme: FARM,
       currentSound: getSound(),
-      cenarios: cenarios
+      cenarios: cenarios,
+      bounceValue: new Animated.Value(0)
     }
 
     //removeAll()
@@ -48,6 +51,27 @@ export default class Main extends Component {
     this.setState({
       currentTheme: a
     })
+  }
+
+  _toggleSubview() {    
+    var toValue = 100;
+
+    if(this.state.showScenarios) {
+      toValue = 0;
+    }
+
+    //This will animate the transalteY of the subview between 0 & 100 depending on its current state
+    //100 comes from the style below, which is the height of the subview.
+    Animated.spring(
+      this.state.bounceValue,
+      {
+        toValue: toValue,
+        velocity: 1000,
+        tension: 5,
+        friction: 2,
+      }
+    ).start();
+
   }
 
   render() {
@@ -66,7 +90,7 @@ export default class Main extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={async () => {
-                  let state = this.state.setSound ? ( 0 ) : ( 1 )
+                  let state = this.state.setSound ? (0) : (1)
                   try {
                     let a = JSON.stringify(state)
                     await AsyncStorage.setItem('hasSound', a)
@@ -76,7 +100,7 @@ export default class Main extends Component {
                     })
                   } catch (error) {
                     console.log(error)
-                  }                  
+                  }
                 }}
                 style={{ marginTop: 16, justifyContent: 'center', marginStart: 10, height: 50, width: 50 }}>
                 {this.state.setSound ? (
@@ -86,53 +110,62 @@ export default class Main extends Component {
                   )}
               </TouchableOpacity>
             </View>
-            <View style={{ flex: 1, justifyContent: 'center', paddingTop: 16 }}>
+            <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', paddingTop: 16 }}>
+              <TouchableOpacity onPress={() => {
+                this.setState({
+                  showScenarios: !this.state.showScenarios
+                })
+              }}
+                style={{ justifyContent: 'center', marginEnd: 16, height: 50, width: 50 }}>
+                <Image source={MOUNTAIN} style={styles.farmImageTop} />
+              </TouchableOpacity>
+              
             </View>
           </View>
           <View style={styles.firstView}>
-            <View style={{
-              position: 'absolute',
-              minHeight: 50,
-              width: 50,
-              borderRadius: 25,
-              top: 0,
-              right: 16,
-              alignItems: 'center',
-              paddingBottom: 5,
-              elevation: 6,
-              shadowOffset: 10,
-              backgroundColor: white
-            }}>
-              <FlatList
-                style={{ flex: 1 }}
-                data={this.state.cenarios}
-                renderItem={({ item }) =>
-                  <TouchableOpacity style={{ height: 40, width: 40, marginTop: 5, borderRadius: 25, backgroundColor: this.state.currentTheme == item.theme ? colorGreenDark : colorPrimaryDark, justifyContent: 'center', alignItems: 'center' }}
-                    onPress={async () => {
-                      try {
-                        let a = JSON.stringify(item.theme)
-                        await AsyncStorage.setItem('theme', a)
+            {this.state.showScenarios ? (
+              <View style={{
+                position: 'absolute',
+                paddingBottom: 5,
+                minHeight: 50,
+                width: 50,
+                borderRadius: 25,
+                top: 0,
+                right: 16,
+                alignItems: 'center',
+              }}>
+                <Animated.View style={{
+                  elevation: 6,
+                  shadowOffset: 10,
+                  backgroundColor: white
+                } ,{transform: [{translateY: this.state.bounceValue}]}}>
+                  <FlatList
+                    style={{ flex: 1 }}
+                    data={this.state.cenarios}
+                    renderItem={({ item }) =>
+                      <TouchableOpacity style={{ height: 40, width: 40, marginTop: 5, borderRadius: 25, backgroundColor: this.state.currentTheme == item.theme ? colorGreenDark : colorPrimaryDark, justifyContent: 'center', alignItems: 'center' }}
+                        onPress={async () => {
+                          try {
+                            let a = JSON.stringify(item.theme)
+                            await AsyncStorage.setItem('theme', a)
 
-                        this.setState({
-                          currentTheme: item.theme
-                        })
-                      } catch (error) {
-                        console.log(error)
-                      }
-                    }}>
-                    <Image source={item.image} style={{ height: 32, width: 32 }} />
-                  </TouchableOpacity>
-                } />
+                            this.setState({
+                              currentTheme: item.theme
+                            })
+                          } catch (error) {
+                            console.log(error)
+                          }
+                        }}>
+                        <Image source={item.image} style={{ height: 32, width: 32 }} />
+                      </TouchableOpacity>
+                    } />
 
-            </View>
+                </Animated.View>
+              </View>
+            ) : (
+                <View />
+              )}
             <TouchableOpacity onPress={async () => {
-              /*try {
-                let a = await AsyncStorage.getItem('theme')
-                alert(a)
-              } catch(e) {
-                // read error
-              }
-              */
               this.props.navigation.navigate('SetName')
             }}>
               <Image source={STARTIMAGE} style={styles.startImage} />
@@ -165,7 +198,6 @@ const styles = StyleSheet.create({
   secondViewTop: {
     flex: 1,
     flexDirection: 'row',
-    borderWidth: 1,
     backgroundColor: colorPrimary
   },
   secondViewBottom: {
