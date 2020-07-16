@@ -20,7 +20,7 @@ import { colorPrimaryDark, colorPrimary, colorGreen, colorGreenDark, white } fro
 import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT, ZOOIMAGE, JUNGLEIMAGE, THEMEFARM, THEMEZOO, THEMEJUNGLE, WITHSOUND, NOSOUND, MOUNTAIN } from '../../images'
 import { removeAll } from '../../realm_services/RealmService'
 import AsyncStorage from '@react-native-community/async-storage'
-import { FARM, getSound, getIconByTheme, getTheme, returnScenarios } from '../globalComponents/GlobalFunctions';
+import { FARM, getSound, getIconByTheme, getTheme, returnScenarios, playSound } from '../globalComponents/GlobalFunctions';
 import { FlatList } from 'react-native-gesture-handler';
 
 export default class Main extends Component {
@@ -90,9 +90,9 @@ export default class Main extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={async () => {
-                  let state = this.state.setSound ? (0) : (1)
+                  let state = this.state.setSound ? 0 : 1
                   try {
-                    let a = JSON.stringify(state)
+                    let a = state.toString()
                     await AsyncStorage.setItem('hasSound', a)
 
                     this.setState({
@@ -106,8 +106,8 @@ export default class Main extends Component {
                 {this.state.setSound ? (
                   <Image source={WITHSOUND} style={styles.soundImagemTop} />
                 ) : (
-                    <Image source={NOSOUND} style={styles.soundImagemTop} />
-                  )}
+                  <Image source={NOSOUND} style={styles.soundImagemTop} />
+                )}
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', paddingTop: 16 }}>

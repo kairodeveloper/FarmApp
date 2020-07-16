@@ -1,5 +1,6 @@
 import { ICONVACA, ICONPASSARO, ICONPORCO, ICONGALINHA, ICONOVELHA, ICONSAPO, ICONCACHORRO, ICONPEIXE, ICONTARTARUGA, ICONCOWBOY, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, FARMIMAGE, ZOOIMAGE, TRANSPORTIMAGE, RANDOMIMAGE,  JUNGLEIMAGE, ICONHIPOPOTAMO, ICONJAGUAR, ICONCOBRA, ICONTUCANO, ICONLEAO, ICONURSO, ICONGORILA, ICONSONIC, ICONLOBO, ICONFALCAO, ICONLAGARTO, ICONPEIXE2, ICONRAPOSA, ICONSURICATE, ICONTIGRE, ICONCORUJA, ICONJACARE, ICONPREGUICA, ICONGIRAFA, THEMEFARM, THEMEZOO, THEMEJUNGLE, THEMETRANSPORT, THEMEFRUIT, THEMERANDOM, ICONCARRO, ICONMOTO, ICONBICICLETA, ICONTREM, ICONONIBUS, ICONAVIAO, ICONPATINETE, ICONSKATE, ICONPATINS, ICONABACAXI, ICONBANANA, ICONMACA, ICONMELANCIA, ICONMORANGO, ICONUVAS, ICONTOMATE, ICONMILHO, ICONCENOURA, FRUITIMAGE, ICONARCOIRIS, ICONBOLA, ICONBOLO, ICONPIRULITO, ICONSORVETE, ICONBONECA, ICONCORACAO, ICONVIOLAO, ICONHAMBURGUER } from "../../images"
 import AsyncStorage from "@react-native-community/async-storage"
+import Sound from "react-native-sound"
 
 export const FARM = 1
 export const ZOO = 2
@@ -241,13 +242,39 @@ async function getTheme() {
 
 async function getSound() {
     let retorno = 0
-    try {
-      retorno = await AsyncStorage.getItem('hasSound')
-    } catch(e) {
-      alert(e)
-    }
 
-    return retorno
+    return parseInt(retorno, 10)
+}
+
+async function playSound(index) {
+    let soundStatus = parseInt(await AsyncStorage.getItem('hasSound'), 10)
+
+    if (soundStatus!=0) {
+        let audioList = [
+            {
+                title: "Correct",
+                isRequire: true,
+                url: require('../../sounds/correct_sound.mp3')
+            },{
+                title: "Incorrect",
+                isRequire: true,
+                url: require('../../sounds/incorrect_sound.mp3')
+            },
+        ]
+    
+        let item = audioList[index]
+        let sound = new Sound(item.url, (error, souond) => {
+            if (error) {
+                alert('error')
+                return
+            }
+    
+            sound.play(() => {
+                sound.release()
+            })
+    
+        })    
+    }
 }
 
 export {
@@ -258,5 +285,6 @@ export {
     getJogadorImage,
     getTheme,
     getIconByTheme,
-    getSound
+    getSound,
+    playSound
 }

@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, blackSemiTransparent, colorGreenDark } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, PLUSICONGREY, MINUSICONGREY, TIMESICONGREY, DIVISIONICONGREY, ICONCAMARAO, ICONDICA } from '../../../images'
-import { isIn, getImageByCode, FARM, getTheme, getIconByTheme } from '../../globalComponents/GlobalFunctions';
+import { isIn, getImageByCode, FARM, getTheme, getIconByTheme, playSound } from '../../globalComponents/GlobalFunctions';
 import { updateThis, getNextMid, saveThis } from '../../../realm_services/RealmService';
 
 const BUTTON_A_TAG = 'a-btn'
@@ -88,9 +88,11 @@ export default class QuestionScreen extends Component {
       if (correct) {
         showCorrect = true
         numJogadas++
+        playSound(0)
       } else {
         showIncorrect = true
         numErradas++
+        playSound(1)
       }
     }
 
