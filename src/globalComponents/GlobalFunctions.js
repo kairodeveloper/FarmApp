@@ -58,6 +58,25 @@ function isIn(position, list) {
     return retorno
 }
 
+function getTextByTheme(theme) {
+    let prefixo1 = "Selecione seus "
+    let prefixo2 = "Selecione suas "
+
+    if (theme==FARM) {
+        return prefixo1 + "animais favoritos"
+    } else if (theme==ZOO) {
+        return prefixo1 + "animais favoritos"
+    } else if (theme==TRANSPORT) {
+        return prefixo1 + "transportes favoritos"
+    } else if (theme==FRUITS) {
+        return prefixo2 + "frutas favoritos"
+    } else if (theme==RANDOM) {
+        return prefixo1 + "objetos favoritos"
+    } else {
+        return prefixo1 + "animais favoritos"
+    }
+}
+
 function getImageByCode(code, theme) {
     if (theme==FARM) {
         if (code==1) {
@@ -280,6 +299,7 @@ async function playSound(index) {
 export {
     returnScenarios,
     isIn,
+    getTextByTheme,
     getImageByCode,
     maskForDate,
     getJogadorImage,

@@ -18,7 +18,7 @@ import {
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, white, black, purple } from '../../../colors';
 import { RETURNIMAGE, FARMIMAGE, ICONCOWBOY, SETTINGSIMAGE, ICONCOWGIRL, ICONENGENHEIRO, ICONENGENHEIRA, ICONFAZENDEIRO, ICONFAZENDEIRA, ICONCOWBOYLOCKED, ICONENGENHEIROLOCKED, ICONENGENHEIRALOCKED, ICONFAZENDEIROLOCKED, ICONFAZENDEIRALOCKED, ICONVACA, ICONPASSARO, ICONPORCO, ICONGALINHA, ICONOVELHA, ICONSAPO, ICONCACHORRO, ICONPEIXE, ICONTARTARUGA } from '../../../images'
-import { isIn, FARM, getTheme, getIconByTheme, getImageByCode } from '../../globalComponents/GlobalFunctions';
+import { isIn, FARM, getTheme, getIconByTheme, getImageByCode, getTextByTheme } from '../../globalComponents/GlobalFunctions';
 
 export default class SelectAnimals extends Component {
 
@@ -98,7 +98,7 @@ export default class SelectAnimals extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.firstViewTop}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>Selecione seus animais favoritos</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: colorPrimaryDark }}>{getTextByTheme(this.state.currentTheme)}</Text>
             <View style={{
               flex: 1,
               width: '100%',
