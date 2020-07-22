@@ -19,6 +19,7 @@ export const RANDOMIMAGE = require('./files/icon_random.png')
 export const MOUNTAIN = require('./files/icons/icon_mountain.png')
 export const NOSOUND = require('./files/icons/icon_no_sound.png')
 export const WITHSOUND = require('./files/icons/icon_sound.png')
+export const ICONMENULEFT = require('./files/icons/icon_menu_left.png')
 
 /* THEMES IMAGES */
 export const THEMEFARM = require('./files/icons/icon_theme_1.png')

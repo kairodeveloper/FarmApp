@@ -16,10 +16,11 @@ import {
   Platform,
   StatusBar
 } from 'react-native'
-import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red, yellow } from '../../../colors';
-import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE, FUNDOADDPLAYERIMAGE } from '../../../images'
-import { findAllNotRemoved, getNextMid, saveThis } from '../../../realm_services/RealmService';
+import { colorPrimaryDark, colorPrimary, colorGreen, white, black, blackSemiTransparent, colorGreenDark, red, yellow, greyTextColor } from '../../../colors';
+import { RETURNIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, PLUSICONBLUE, FUNDOADDPLAYERIMAGE, ICONMENULEFT, ICONLEAO } from '../../../images'
+import { findAllNotRemoved, getNextMid, saveThis, deleteThis, updateThis } from '../../../realm_services/RealmService';
 import { FARM, ZOO, JUNGLE, getIconByTheme, getTheme } from '../../globalComponents/GlobalFunctions';
+import Swipeout from 'react-native-swipeout';
 
 const ModalNewPlayer = require('../../modals/ModalNewPlayer')
 
@@ -39,6 +40,7 @@ export default class SetName extends Component {
       currentTheme: FARM,
       jogadores: jogadores,
       jogadorSelecionado: 0,
+      jogadorMidModal: 0,
       name: "",
       showModalName: false
     }
@@ -52,36 +54,52 @@ export default class SetName extends Component {
   }
 
   addNewJogador() {
-    let jogadores = []
-    let stateJogadores = this.state.jogadores
+    if (this.state.jogadorMidModal!=0) {
+      let jogador = {}
+      jogador.mid = this.state.jogadorMidModal
+      jogador.nome = this.state.name
+      updateThis('Usuario', jogador, ['nome'])
 
-    stateJogadores.map((it) => {
-      jogadores.push(it)
-    })
+      let jogadores = findAllNotRemoved('Usuario')
+      this.setState({
+        jogadores: jogadores,
+        name: "",
+        jogadorMidModal: 0,
+        showModalName: false
+      })
+    } else {
+      let jogadores = []
+      let stateJogadores = this.state.jogadores
 
-    let newJogador = {}
-    newJogador.mid = getNextMid('Usuario')
-    newJogador.nome = this.state.name
-    newJogador.numeroQuestoes = 0
-    this.saveUsuario(newJogador.mid)
-    jogadores.push(newJogador)
+      stateJogadores.map((it) => {
+        jogadores.push(it)
+      })
 
-    this.setState({
-      jogadorSelecionado: newJogador.mid,
-      jogadores: jogadores,
-      showModalName: false
-    })
+      let newJogador = {}
+      newJogador.mid = getNextMid('Usuario')
+      newJogador.nome = this.state.name
+      newJogador.numeroQuestoes = 0
+      this.saveUsuario(newJogador.mid)
+      jogadores.push(newJogador)
+
+      this.setState({
+        jogadorSelecionado: newJogador.mid,
+        jogadores: jogadores,
+        showModalName: false
+      })
+    }
   }
 
   selectJogador(mid) {
     let jogadorSelecionado = 0
 
-    jogadorSelecionado = mid
+    if (mid!=this.state.jogadorSelecionado) {
+      jogadorSelecionado = mid
+    }
 
     this.setState({
       jogadorSelecionado: jogadorSelecionado
     })
-    //this.props.navigation.replace('SetCharacter', { jogador: jogador })
   }
 
   getJogadorSelecionado() {
@@ -104,6 +122,35 @@ export default class SetName extends Component {
     saveThis('Usuario', user)
   }
 
+  editUsuario(item) {
+    this.setState({
+      jogadorMidModal: item.mid,
+      name: item.nome,
+      showModalName: true
+    })
+  }
+
+  deleteUsuario(mid) {
+    Alert.alert('Atenção', 'Deseja realmente excluir esse usuário?', [
+      {
+        text: 'SIM',
+        onPress: () => {
+          deleteThis('Usuario', mid)
+          let jogadores = findAllNotRemoved('Usuario')
+      
+          this.setState({
+            jogadorSelecionado: 0,
+            jogadores: jogadores
+          })      
+        }
+      },
+      {
+        text: 'CANCELAR',
+        onPress: () => {}
+      }
+    ])
+  }
+
   render() {
     let modalName = <Modal
       animationType="slide"
@@ -118,6 +165,7 @@ export default class SetName extends Component {
               textColor={colorPrimaryDark}
               baseColor={colorPrimaryDark}
               placeholder={'Digite o nome...'}
+              value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
             />
           </View>
@@ -143,7 +191,8 @@ export default class SetName extends Component {
           </TouchableOpacity>
         </View>
       </View>
-    </Modal>
+    </Modal>     
+
     return (
       <View style={styles.safeView}>
         {modalName}
@@ -165,25 +214,44 @@ export default class SetName extends Component {
             ) : (
                 <View style={{ flex: 1 }}>
                   <FlatList
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, paddingTop: 16, paddingBottom: 16 }}
                     data={this.state.jogadores}
                     renderItem={({ item }) =>
+                    <Swipeout right={[
+                      {
+                        text: 'Editar',
+                        backgroundColor: greyTextColor,
+                        onPress: () => {
+                          this.editUsuario(item)
+                        }
+                      },{
+                        text: 'Excluir',
+                        backgroundColor: red,
+                        onPress: () => {
+                          this.deleteUsuario(item.mid)
+                        }
+                      }
+                    ]} 
+                    autoClose={true}
+                    backgroundColor={colorPrimary} style={{marginTop: 16, height: 50, borderRadius: 15}}>
                       <TouchableOpacity
                         onPress={() => {
                           this.selectJogador(item.mid)
                         }}
                         style={
                           item.mid == this.state.jogadorSelecionado ? (
-                            { height: 60, borderWidth: 4, borderColor: colorPrimaryDark, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: yellow }
+                            { height: 50, borderRightWidth: 10, flexDirection: 'row', borderColor: colorPrimaryDark, justifyContent: 'space-between', alignItems: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: yellow }
                           ) : (
-                              { height: 50, marginTop: 16, justifyContent: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white }
+                              { height: 50, borderRightWidth: 10, flexDirection: 'row', borderColor: colorPrimaryDark, justifyContent: 'space-between',  alignItems: 'center', paddingStart: 16, borderRadius: 15, backgroundColor: white }
                             )}>
-                        <Text style={item.selecionado ? (
-                          { fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }
+                        <Text style={item.mid == this.state.jogadorSelecionado ? (
+                          { fontSize: 18, fontWeight: 'bold', color: white }
                         ) : (
                             { fontSize: 18, fontWeight: 'bold', color: colorPrimaryDark }
                           )}>{item.nome}</Text>
+                          <Image source={ICONMENULEFT} style={{height: 24, width: 24, marginEnd: -2}} />
                       </TouchableOpacity>
+                      </Swipeout>
                     } />
                 </View>
               )}
