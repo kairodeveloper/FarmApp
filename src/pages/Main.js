@@ -17,7 +17,7 @@ import {
   Animated
 } from 'react-native'
 import { colorPrimaryDark, colorPrimary, colorGreen, colorGreenDark, white } from '../../colors';
-import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT, ZOOIMAGE, JUNGLEIMAGE, THEMEFARM, THEMEZOO, THEMEJUNGLE, WITHSOUND, NOSOUND, MOUNTAIN } from '../../images'
+import { STARTIMAGE, FARMIMAGE, PODIOIMAGE, SETTINGSIMAGE, CHANGEAMBIENT, ZOOIMAGE, JUNGLEIMAGE, THEMEFARM, THEMEZOO, THEMEJUNGLE, WITHSOUND, NOSOUND, MOUNTAIN, LOGONOME } from '../../images'
 import { removeAll } from '../../realm_services/RealmService'
 import AsyncStorage from '@react-native-community/async-storage'
 import { FARM, getSound, getIconByTheme, getTheme, returnScenarios, playSound } from '../globalComponents/GlobalFunctions';
@@ -123,6 +123,10 @@ export default class Main extends Component {
             </View>
           </View>
           <View style={styles.firstView}>
+            <View style={{height: 100, position: 'absolute', top: 32}}>
+              <Image source={LOGONOME} style={{height: 100, width: 185}} />
+            </View>
+
             {this.state.showScenarios ? (
               <View style={{
                 position: 'absolute',
@@ -165,6 +169,7 @@ export default class Main extends Component {
             ) : (
                 <View />
               )}
+
             <TouchableOpacity onPress={async () => {
               this.props.navigation.navigate('SetName')
             }}>
